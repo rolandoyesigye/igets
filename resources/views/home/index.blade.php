@@ -30,17 +30,80 @@
 
       <!-- Auth Buttons (md+) -->
       <div class="hidden md:flex items-center space-x-4">
-        @if (Route::has('login'))
-          @auth
-            <a href="{{ url('/dashboard') }}" class="px-4 py-2 border rounded">Dashboard</a>
-          @else
-            <a href="{{ route('login') }}" class="bg-orange-500 text-white px-4 py-2 rounded">Log in</a>
-            @if (Route::has('register'))
-              <a href="{{ route('register') }}" class="bg-orange-500 text-white px-4 py-2 rounded">Register</a>
+  @if (Route::has('login'))
+    @auth
+      @if(auth()->user()->hasRole('admin') || auth()->user()->hasPermissionTo('access-dashboard'))
+        <a href="{{ url('/dashboard') }}" class="px-4 py-2 border rounded hover:bg-gray-50">Dashboard</a>
+      @else
+        <span class="px-4 py-2 text-gray-500 text-sm">Welcome, {{ auth()->user()->name }}</span>
+
+        <!-- Account dropdown -->
+        <div x-data="{ open: false }" @click.away="open = false" class="relative">
+          <button @click="open = !open" class="flex items-center px-4 py-2 rounded hover:bg-gray-50">
+            <svg class="h-5 w-5 text-gray-500 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
+            </svg>
+            <span class="text-gray-700">Account</span>
+            <svg class="h-4 w-4 text-gray-400 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+            </svg>
+          </button>
+
+          <div 
+            x-show="open" 
+            x-transition 
+            class="absolute right-0 mt-2 w-48 bg-white border rounded shadow-lg z-10"
+          >
+            <a href="#" class="flex items-center px-4 py-2 text-gray-700 hover:bg-gray-100">
+              <svg class="h-5 w-5 mr-2 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+              </svg>
+              Orders
+            </a>
+            @if(auth()->user()->hasRole('admin') || auth()->user()->hasPermissionTo('access-dashboard'))
+              <a href="{{ url('/dashboard') }}" class="flex items-center px-4 py-2 text-gray-700 hover:bg-gray-100">
+                <svg class="h-5 w-5 mr-2 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
+                </svg>
+                Dashboard
+              </a>
             @endif
-          @endauth
-        @endif
-      </div>
+            <a href="#" class="flex items-center px-4 py-2 text-gray-700 hover:bg-gray-100">
+              <svg class="h-5 w-5 mr-2 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path>
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+              </svg>
+              Settings
+            </a>
+            <form method="POST" action="{{ route('logout') }}">
+              @csrf
+              <button type="submit" class="w-full text-left flex items-center px-4 py-2 text-gray-700 hover:bg-gray-100">
+                <svg class="h-5 w-5 mr-2 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path>
+                </svg>
+                Logout
+              </button>
+            </form>
+          </div>
+        </div>
+
+        <!-- Cart icon -->
+        <a href="{{ route('cart.index') }}" class="px-4 py-2 rounded hover:bg-gray-50 flex items-center">
+          <svg class="h-5 w-5 text-gray-500 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4m0 0L7 13m0 0l-2.5 5M7 13l2.5 5m6-5v6a2 2 0 01-2 2H9a2 2 0 01-2-2v-6m8 0V9a2 2 0 00-2-2H9a2 2 0 00-2 2v4.01"></path>
+          </svg>
+          <span class="text-gray-700">Cart</span>
+        </a>
+      @endif
+    @else
+      <a href="{{ route('login') }}" class="bg-orange-500 text-white px-4 py-2 rounded hover:bg-orange-600">Log in</a>
+      @if (Route::has('register'))
+        <a href="{{ route('register') }}" class="bg-orange-500 text-white px-4 py-2 rounded hover:bg-orange-600">Register</a>
+      @endif
+    @endauth
+  @endif
+</div>
+
 
       <!-- Mobile Menu Button -->
       <button @click="open = !open" class="md:hidden text-gray-700">
@@ -62,11 +125,15 @@
         <div class="pt-4 border-t">
           @if (Route::has('login'))
             @auth
-              <a href="{{ url('/dashboard') }}" class="block px-4 py-2 border rounded mb-2">Dashboard</a>
+              @if(auth()->user()->hasRole('admin') || auth()->user()->hasPermissionTo('access-dashboard'))
+                <a href="{{ url('/dashboard') }}" class="block px-4 py-2 border rounded mb-2 hover:bg-gray-50">Dashboard</a>
+              @else
+                <span class="block px-4 py-2 text-gray-500 text-sm">Welcome, {{ auth()->user()->name }}</span>
+              @endif
             @else
-              <a href="{{ route('login') }}" class="block bg-orange-500 text-white px-4 py-2 rounded mb-2">Log in</a>
+              <a href="{{ route('login') }}" class="block bg-orange-500 text-white px-4 py-2 rounded mb-2 hover:bg-orange-600">Log in</a>
               @if (Route::has('register'))
-                <a href="{{ route('register') }}" class="block bg-orange-500 text-white px-4 py-2 rounded">Register</a>
+                <a href="{{ route('register') }}" class="block bg-orange-500 text-white px-4 py-2 rounded hover:bg-orange-600">Register</a>
               @endif
             @endauth
           @endif
@@ -74,6 +141,25 @@
       </nav>
     </div>
   </header>
+
+  <!-- Flash Messages -->
+  @if(session('error'))
+    <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mx-6 mt-4" role="alert">
+      <span class="block sm:inline">{{ session('error') }}</span>
+      <span class="absolute top-0 bottom-0 right-0 px-4 py-3">
+        <svg class="fill-current h-6 w-6 text-red-500" role="button" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
+          <title>Close</title>
+          <path d="M14.348 14.849a1.2 1.2 0 0 1-1.697 0L10 11.819l-2.651 3.029a1.2 1.2 0 1 1-1.697-1.697l2.758-3.15-2.759-3.152a1.2 1.2 0 1 1 1.697-1.697L10 8.183l2.651-3.031a1.2 1.2 0 1 1 1.697 1.697l-2.758 3.152 2.758 3.15a1.2 1.2 0 0 1 0 1.698z"/>
+        </svg>
+      </span>
+    </div>
+  @endif
+
+  @if(session('success'))
+    <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative mx-6 mt-4" role="alert">
+      <span class="block sm:inline">{{ session('success') }}</span>
+    </div>
+  @endif
 
   <!-- HERO SLIDER -->
   <section class="bg-gradient-to-r from-blue-100 to-purple-100 py-10 relative overflow-hidden">
