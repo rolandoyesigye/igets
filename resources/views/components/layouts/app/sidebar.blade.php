@@ -17,6 +17,28 @@
                 </flux:navlist.group>
             </flux:navlist>
 
+            <flux:navlist variant="outline">
+                <flux:dropdown position="bottom" align="start">
+                    <!-- Trigger button inside sidebar navlist -->
+                    <flux:navlist.item icon="home" icon:trailing="chevron-down" class="cursor-pointer">
+                    {{ __('Products') }}
+                    </flux:navlist.item>
+
+                    <!-- Dropdown menu -->
+                    <flux:navmenu>
+                    <!-- Add Product -->
+                    <flux:navmenu.item icon="plus" href="{{ route('products.create') }}" :current="request()->routeIs('products.create')" wire:navigate>
+                        {{ __('Add Products') }}
+                    </flux:navmenu.item>
+
+                    <!-- View Products -->
+                    <flux:navmenu.item icon="eye" href="{{ route('products.index') }}" :current="request()->routeIs('products.index')" wire:navigate>
+                        {{ __('View Products') }}
+                    </flux:navmenu.item>
+                    </flux:navmenu>
+                </flux:dropdown>
+                </flux:navlist>
+
             <flux:spacer />
 
             <flux:navlist variant="outline">
