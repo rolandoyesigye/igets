@@ -56,4 +56,14 @@ class HomeController extends Controller
 
         return view('home.show', compact('product', 'relatedProducts'));
     }
+
+    public function orders()
+    {
+        $orders = \App\Models\Order::where('user_id', auth()->id())
+            ->with('items.product')
+            ->latest()
+            ->paginate(10);
+
+        return view('home.orders', compact('orders'));
+    }
 } 

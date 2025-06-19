@@ -36,7 +36,7 @@
         autoplay: true,
         slides: [
           {
-            title: '13 Years WITH iGETS',
+            title: '6 Years WITH iGETS',
             subtitle: '26 May – 22 June',
             heading: 'Electronics Wano byonna!',
             discount: '70%',
@@ -216,9 +216,9 @@
     <!-- Product Card -->
         <a href="{{ route('home.show', $laptop) }}" class="block">
           <div class="relative bg-white shadow rounded p-2 hover:shadow-lg transition-shadow">
-            @if($laptop->original_price && $laptop->original_price > $laptop->price)
-              <span class="absolute top-2 left-2 bg-orange-500 text-white text-xs px-2 py-0.5 rounded-full">
-                -{{ $laptop->discount_percentage ?? round((($laptop->original_price - $laptop->price) / $laptop->original_price) * 100) }}%
+            @if($laptop->condition)
+              <span class="absolute top-2 left-2 bg-blue-500 text-white text-xs px-2 py-0.5 rounded-full">
+                {{ ucfirst($laptop->condition) }}
               </span>
             @endif
             @if($laptop->image)
@@ -234,6 +234,22 @@
             <p class="text-orange-600 font-bold text-sm">UGX {{ number_format($laptop->price) }}</p>
             @if($laptop->original_price && $laptop->original_price > $laptop->price)
               <p class="line-through text-xs text-gray-500">UGX {{ number_format($laptop->original_price) }}</p>
+            @endif
+            
+            <!-- Add to Cart Button -->
+            @if($laptop->is_active)
+              <form action="{{ route('cart.add') }}" method="POST" class="mt-2" onclick="event.stopPropagation();">
+                @csrf
+                <input type="hidden" name="product_id" value="{{ $laptop->id }}">
+                <input type="hidden" name="quantity" value="1">
+                <button type="submit" class="w-full bg-orange-500 text-white text-xs py-1 px-2 rounded hover:bg-orange-600 transition-colors">
+                  Add to Cart
+                </button>
+              </form>
+            @else
+              <div class="mt-2 text-center">
+                <span class="text-xs text-red-600">Out of Stock</span>
+              </div>
             @endif
           </div>
         </a>
@@ -256,9 +272,9 @@
       <!-- Product Card -->
         <a href="{{ route('home.show', $accessory) }}" class="block">
           <div class="relative bg-white shadow rounded p-2 hover:shadow-lg transition-shadow">
-            @if($accessory->original_price && $accessory->original_price > $accessory->price)
-              <span class="absolute top-2 left-2 bg-orange-500 text-white text-xs px-2 py-0.5 rounded-full">
-                -{{ $accessory->discount_percentage ?? round((($accessory->original_price - $accessory->price) / $accessory->original_price) * 100) }}%
+            @if($accessory->condition)
+              <span class="absolute top-2 left-2 bg-blue-500 text-white text-xs px-2 py-0.5 rounded-full">
+                {{ ucfirst($accessory->condition) }}
               </span>
             @endif
             @if($accessory->image)
@@ -274,6 +290,22 @@
             <p class="text-orange-600 font-bold text-sm">UGX {{ number_format($accessory->price) }}</p>
             @if($accessory->original_price && $accessory->original_price > $accessory->price)
               <p class="line-through text-xs text-gray-500">UGX {{ number_format($accessory->original_price) }}</p>
+            @endif
+            
+            <!-- Add to Cart Button -->
+            @if($accessory->is_active)
+              <form action="{{ route('cart.add') }}" method="POST" class="mt-2" onclick="event.stopPropagation();">
+                @csrf
+                <input type="hidden" name="product_id" value="{{ $accessory->id }}">
+                <input type="hidden" name="quantity" value="1">
+                <button type="submit" class="w-full bg-orange-500 text-white text-xs py-1 px-2 rounded hover:bg-orange-600 transition-colors">
+                  Add to Cart
+                </button>
+              </form>
+            @else
+              <div class="mt-2 text-center">
+                <span class="text-xs text-red-600">Out of Stock</span>
+              </div>
             @endif
           </div>
         </a>
@@ -296,9 +328,9 @@
       <!-- Product Card -->
         <a href="{{ route('home.show', $desktop) }}" class="block">
           <div class="relative bg-white shadow rounded p-2 hover:shadow-lg transition-shadow">
-            @if($desktop->original_price && $desktop->original_price > $desktop->price)
-              <span class="absolute top-2 left-2 bg-orange-500 text-white text-xs px-2 py-0.5 rounded-full">
-                -{{ $desktop->discount_percentage ?? round((($desktop->original_price - $desktop->price) / $desktop->original_price) * 100) }}%
+            @if($desktop->condition)
+              <span class="absolute top-2 left-2 bg-blue-500 text-white text-xs px-2 py-0.5 rounded-full">
+                {{ ucfirst($desktop->condition) }}
               </span>
             @endif
             @if($desktop->image)
@@ -314,6 +346,22 @@
             <p class="text-orange-600 font-bold text-sm">UGX {{ number_format($desktop->price) }}</p>
             @if($desktop->original_price && $desktop->original_price > $desktop->price)
               <p class="line-through text-xs text-gray-500">UGX {{ number_format($desktop->original_price) }}</p>
+            @endif
+            
+            <!-- Add to Cart Button -->
+            @if($desktop->is_active)
+              <form action="{{ route('cart.add') }}" method="POST" class="mt-2" onclick="event.stopPropagation();">
+                @csrf
+                <input type="hidden" name="product_id" value="{{ $desktop->id }}">
+                <input type="hidden" name="quantity" value="1">
+                <button type="submit" class="w-full bg-orange-500 text-white text-xs py-1 px-2 rounded hover:bg-orange-600 transition-colors">
+                  Add to Cart
+                </button>
+              </form>
+            @else
+              <div class="mt-2 text-center">
+                <span class="text-xs text-red-600">Out of Stock</span>
+              </div>
             @endif
           </div>
         </a>

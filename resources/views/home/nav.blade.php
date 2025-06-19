@@ -30,6 +30,28 @@
 
       <!-- Auth Buttons (md+) -->
       <div class="hidden md:flex items-center space-x-4">
+        <!-- Cart icon - shown for all users -->
+        <a href="{{ Auth::check() ? route('cart.index') : route('login') }}" class="px-4 py-2 rounded hover:bg-gray-50 flex items-center relative">
+          <svg class="h-5 w-5 text-gray-500 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4m0 0L7 13m0 0l-2.5 5M7 13l2.5 5m6-5v6a2 2 0 01-2 2H9a2 2 0 01-2-2v-6m8 0V9a2 2 0 00-2-2H9a2 2 0 00-2 2v4.01"></path>
+          </svg>
+          <span class="text-gray-700">{{ Auth::check() ? 'Cart' : 'View Cart' }}</span>
+          @php
+            $cartCount = 0;
+            if (Auth::check()) {
+                $cartCount = \App\Models\Cart::where('user_id', Auth::id())->sum('quantity');
+            } else {
+                $cart = session('cart', []);
+                $cartCount = array_sum($cart);
+            }
+          @endphp
+          @if($cartCount > 0)
+            <span class="absolute -top-1 -right-1 bg-orange-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
+              {{ $cartCount > 99 ? '99+' : $cartCount }}
+            </span>
+          @endif
+        </a>
+
   @if (Route::has('login'))
     @auth
       @if(auth()->user()->hasRole('admin') || auth()->user()->hasPermissionTo('access-dashboard'))
@@ -54,11 +76,11 @@
             x-transition 
             class="absolute right-0 mt-2 w-48 bg-white border rounded shadow-lg z-10"
           >
-            <a href="#" class="flex items-center px-4 py-2 text-gray-700 hover:bg-gray-100">
+            <a href="{{ route('home.orders') }}" class="flex items-center px-4 py-2 text-gray-700 hover:bg-gray-100">
               <svg class="h-5 w-5 mr-2 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
               </svg>
-              Orders
+              My Orders
             </a>
             @if(auth()->user()->hasRole('admin') || auth()->user()->hasPermissionTo('access-dashboard'))
               <a href="{{ url('/dashboard') }}" class="flex items-center px-4 py-2 text-gray-700 hover:bg-gray-100">
@@ -86,14 +108,6 @@
             </form>
           </div>
         </div>
-
-        <!-- Cart icon -->
-        <a href="{{ route('cart.index') }}" class="px-4 py-2 rounded hover:bg-gray-50 flex items-center">
-          <svg class="h-5 w-5 text-gray-500 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4m0 0L7 13m0 0l-2.5 5M7 13l2.5 5m6-5v6a2 2 0 01-2 2H9a2 2 0 01-2-2v-6m8 0V9a2 2 0 00-2-2H9a2 2 0 00-2 2v4.01"></path>
-          </svg>
-          <span class="text-gray-700">Cart</span>
-        </a>
       @endif
     @else
       <a href="{{ route('login') }}" class="bg-orange-500 text-white px-4 py-2 rounded hover:bg-orange-600">Log in</a>
@@ -122,6 +136,29 @@
         <a href="{{ route('products.index') }}" class="block text-gray-700 hover:text-orange-500">Laptops</a>
         <a href="{{ route('products.index') }}" class="block text-gray-700 hover:text-orange-500">Accessories</a>
         <a href="{{ route('products.index') }}" class="block text-gray-700 hover:text-orange-500">Desktops</a>
+        
+        <!-- Cart link for mobile -->
+        <a href="{{ Auth::check() ? route('cart.index') : route('login') }}" class="block text-gray-700 hover:text-orange-500 flex items-center">
+          <svg class="h-5 w-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4m0 0L7 13m0 0l-2.5 5M7 13l2.5 5m6-5v6a2 2 0 01-2 2H9a2 2 0 01-2-2v-6m8 0V9a2 2 0 00-2-2H9a2 2 0 00-2 2v4.01"></path>
+          </svg>
+          {{ Auth::check() ? 'Cart' : 'View Cart' }}
+          @php
+            $cartCount = 0;
+            if (Auth::check()) {
+                $cartCount = \App\Models\Cart::where('user_id', Auth::id())->sum('quantity');
+            } else {
+                $cart = session('cart', []);
+                $cartCount = array_sum($cart);
+            }
+          @endphp
+          @if($cartCount > 0)
+            <span class="ml-2 bg-orange-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
+              {{ $cartCount > 99 ? '99+' : $cartCount }}
+            </span>
+          @endif
+        </a>
+        
         <div class="pt-4 border-t">
           @if (Route::has('login'))
             @auth

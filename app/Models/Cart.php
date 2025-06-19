@@ -44,4 +44,18 @@ class Cart extends Model
     {
         return $this->price * $this->quantity;
     }
+
+    /**
+     * Boot the model and set session_id if not provided
+     */
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::creating(function ($cart) {
+            if (empty($cart->session_id)) {
+                $cart->session_id = session()->getId();
+            }
+        });
+    }
 }

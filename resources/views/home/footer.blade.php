@@ -72,7 +72,7 @@
     <div class="border-t border-gray-700 mt-8 pt-6">
       <div class="container mx-auto text-center text-sm text-gray-400">
         <p>&copy; 2025 iGETS IT Solutions. All Rights Reserved. Designed by 
-          <a href="#" class="underline hover:text-white transition-colors">Oyerol Technologies</a>
+          <a href="#" class="underline hover:text-white transition-colors">Oyerol Tech</a>
         </p>
       </div>
     </div>

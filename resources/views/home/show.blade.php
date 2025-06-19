@@ -91,23 +91,27 @@
 
             <!-- Add to Cart Button -->
             @if($product->is_active)
-                <div class="space-y-4">
+                <form action="{{ route('cart.add') }}" method="POST" class="space-y-4">
+                    @csrf
+                    <input type="hidden" name="product_id" value="{{ $product->id }}">
                     <div class="flex items-center space-x-4">
                         <label for="quantity" class="text-gray-700 font-medium">Quantity:</label>
                         <input type="number" 
                                id="quantity" 
+                               name="quantity" 
                                value="1" 
                                min="1" 
                                max="99"
                                class="w-20 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500">
                     </div>
-                    <button class="w-full bg-orange-500 text-white py-3 px-6 rounded-lg font-semibold hover:bg-orange-600 transition-colors duration-200 flex items-center justify-center space-x-2">
+                    <button type="submit" 
+                            class="w-full bg-orange-500 text-white py-3 px-6 rounded-lg font-semibold hover:bg-orange-600 transition-colors duration-200 flex items-center justify-center space-x-2">
                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4m0 0L7 13m0 0l-2.5 5M7 13l2.5 5m6-5v6a2 2 0 01-2 2H9a2 2 0 01-2-2v-6m6 0V9a2 2 0 00-2-2H9a2 2 0 00-2 2v4.01"></path>
                         </svg>
                         <span>Add to Cart</span>
                     </button>
-                </div>
+                </form>
             @else
                 <div class="bg-red-50 border border-red-200 rounded-lg p-4 text-center">
                     <p class="text-red-600 font-semibold">This product is currently out of stock</p>

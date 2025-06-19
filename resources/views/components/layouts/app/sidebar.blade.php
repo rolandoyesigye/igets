@@ -20,7 +20,7 @@
             <flux:navlist variant="outline">
                 <flux:dropdown position="bottom" align="start">
                     <!-- Trigger button inside sidebar navlist -->
-                    <flux:navlist.item icon="home" icon:trailing="chevron-down" class="cursor-pointer">
+                    <flux:navlist.item icon="" icon:trailing="chevron-down" class="cursor-pointer">
                     {{ __('Products') }}
                     </flux:navlist.item>
 
@@ -38,6 +38,11 @@
                     </flux:navmenu>
                 </flux:dropdown>
                 </flux:navlist>
+
+                <flux:navlist variant="outline">
+                    <flux:navlist.item icon="shopping-cart" :href="route('admin.orders.index')" :current="request()->routeIs('admin.orders.index')" wire:navigate>{{ __('Orders') }}</flux:navlist.item>
+                
+            </flux:navlist>
 
             <flux:spacer />
 
