@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF‑8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>iGETS</title>
+  <title>iGET</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://unpkg.com/alpinejs@3" defer></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
@@ -19,9 +19,9 @@
       <!-- Desktop Nav -->
       <nav class="hidden md:flex items-center space-x-6 sticky-top">
         <a href="{{ route('home') }}" class="text-gray-700 hover:text-orange-500">Home</a>
-        <a href="{{ route('products.index') }}" class="text-gray-700 hover:text-orange-500">Laptops</a>
-        <a href="{{ route('products.index') }}" class="text-gray-700 hover:text-orange-500">Accessories</a>
-        <a href="{{ route('products.index') }}" class="text-gray-700 hover:text-orange-500">Desktops</a>
+        <a href="{{ route('home.laptops') }}" class="text-gray-700 hover:text-orange-500">Laptops</a>
+        <a href="{{ route('home.accessories') }}" class="text-gray-700 hover:text-orange-500">Accessories</a>
+        <a href="{{ route('home.phones') }}" class="text-gray-700 hover:text-orange-500">Phones</a>
         <div class="relative">
           <input type="text" placeholder="Search" class="px-3 py-1 border border-gray-300 rounded-l-md focus:outline-none"/>
           <button class="absolute top-0 right-0 bg-orange-500 text-white px-3 py-1 rounded-r-md">Go</button>
@@ -110,7 +110,7 @@
         </div>
       @endif
     @else
-      <a href="{{ route('login') }}" class="bg-orange-500 text-white px-4 py-2 rounded hover:bg-orange-600">Log in</a>
+      <a href="{{ route('login') }}" class="bg-orange-500 text-white px-4 py-2 rounded hover:bg-orange-600">Login</a>
       @if (Route::has('register'))
         <a href="{{ route('register') }}" class="bg-orange-500 text-white px-4 py-2 rounded hover:bg-orange-600">Register</a>
       @endif
@@ -133,9 +133,9 @@
          class="md:hidden bg-white border-t border-gray-200">
       <nav class="px-6 py-4 space-y-2">
         <a href="{{ route('home') }}" class="block text-gray-700 hover:text-orange-500">Home</a>
-        <a href="{{ route('products.index') }}" class="block text-gray-700 hover:text-orange-500">Laptops</a>
-        <a href="{{ route('products.index') }}" class="block text-gray-700 hover:text-orange-500">Accessories</a>
-        <a href="{{ route('products.index') }}" class="block text-gray-700 hover:text-orange-500">Desktops</a>
+        <a href="{{ route('home.laptops') }}" class="block text-gray-700 hover:text-orange-500">Laptops</a>
+        <a href="{{ route('home.accessories') }}" class="block text-gray-700 hover:text-orange-500">Accessories</a>
+        <a href="{{ route('home.phones') }}" class="block text-gray-700 hover:text-orange-500">Phones</a>
         
         <!-- Cart link for mobile -->
         <a href="{{ Auth::check() ? route('cart.index') : route('login') }}" class="block text-gray-700 hover:text-orange-500 flex items-center">

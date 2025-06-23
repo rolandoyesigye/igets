@@ -12,12 +12,20 @@ Route::get('/', [HomeController::class, 'index'])->name('home');
 
 // Keep the existing index route for backward compatibility
 Route::get('/index', [HomeController::class, 'index'])->name('index');
+Route::get('/home/laptops', [HomeController::class, 'laptops'])->name('home.laptops');
+Route::get('/home/accessories', [HomeController::class, 'accessories'])->name('home.accessories');
+Route::get('/home/phones', [HomeController::class, 'phones'])->name('home.phones');
 
 // Product show route using HomeController
 Route::get('/product/{product}', [HomeController::class, 'show'])->name('home.show');
 
 // Orders for Home
 Route::get('/home/orders', [HomeController::class, 'orders'])->name('home.orders');
+
+// Category pages
+Route::get('/home/laptops', [HomeController::class, 'laptops'])->name('home.laptops');
+Route::get('/home/accessories', [HomeController::class, 'accessories'])->name('home.accessories');
+Route::get('/home/phones', [HomeController::class, 'phones'])->name('home.phones');
 
 // Cart routes
 Route::post('/cart/add', [CartController::class, 'add'])->name('cart.add'); // Open for everyone
@@ -41,8 +49,6 @@ Route::get('/profile', function () {
 // Product routes using ProductController
 Route::resource('products', ProductController::class);
 
-
-
 Route::view('dashboard', 'dashboard')
     ->middleware(['auth', 'verified', 'dashboard.access'])
     ->name('dashboard');
@@ -62,5 +68,7 @@ Route::middleware(['auth', 'dashboard.access'])->group(function () {
         Route::get('/orders/filter', [\App\Http\Controllers\Admin\OrderController::class, 'filter'])->name('orders.filter');
     });
 });
+
+
 
 require __DIR__.'/auth.php';

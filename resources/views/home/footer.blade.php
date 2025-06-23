@@ -3,7 +3,7 @@
       <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-8">
         <!-- Logo & Social Icons -->
         <div>
-          <img class="w-16 mb-4" src="{{ asset('images/logo1.png') }}" alt="iGETS Logo">
+          <img class="w-16 mb-4" src="{{ asset('images/logo1.png') }}" alt="iGET Logo">
           <p class="text-sm text-gray-300 mb-4">Your trusted partner for quality electronics and IT solutions.</p>
           <ul class="flex space-x-4 text-xl">
             <li><a href="#" class="hover:text-blue-500 transition-colors"><i class="fab fa-facebook"></i></a></li>
@@ -18,9 +18,9 @@
           <h3 class="text-lg font-semibold mb-4">Quick Links</h3>
           <ul class="space-y-2">
             <li><a href="{{ route('home') }}" class="hover:underline text-gray-300 hover:text-white transition-colors">Home</a></li>
-            <li><a href="{{ route('products.index') }}" class="hover:underline text-gray-300 hover:text-white transition-colors">Laptops</a></li>
-            <li><a href="{{ route('products.index') }}" class="hover:underline text-gray-300 hover:text-white transition-colors">Accessories</a></li>
-            <li><a href="{{ route('products.index') }}" class="hover:underline text-gray-300 hover:text-white transition-colors">Desktops</a></li>
+            <li><a href="{{ route('home.laptops') }}" class="hover:underline text-gray-300 hover:text-white transition-colors">Laptops</a></li>
+            <li><a href="{{ route('home.accessories') }}" class="hover:underline text-gray-300 hover:text-white transition-colors">Accessories</a></li>
+            <li><a href="{{ route('home.phones') }}" class="hover:underline text-gray-300 hover:text-white transition-colors">Phones</a></li>
           </ul>
         </div>
 
@@ -35,7 +35,7 @@
             </p>
             <p class="flex items-center">
               <i class="fas fa-phone mr-2 text-orange-500"></i>
-              <a href="tel:+256123456789" class="hover:text-white transition-colors">+256 123 456 789</a>
+              <a href="tel:+256123456789" class="hover:text-white transition-colors">+256 7014823881</a>
             </p>
             <p class="flex items-center">
               <i class="fas fa-envelope mr-2 text-orange-500"></i>

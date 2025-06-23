@@ -71,7 +71,7 @@
                                 class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent @error('category') border-red-500 @enderror">
                             <option value="">Select Category</option>
                             <option value="laptops" {{ old('category') == 'laptops' ? 'selected' : '' }}>Laptops</option>
-                            <option value="desktops" {{ old('category') == 'desktops' ? 'selected' : '' }}>Desktops</option>
+                            <option value="desktops" {{ old('category') == 'desktops' ? 'selected' : '' }}>Phones</option>
                             <option value="accessories" {{ old('category') == 'accessories' ? 'selected' : '' }}>Accessories</option>
                         </select>
                         @error('category')

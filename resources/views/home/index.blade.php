@@ -317,10 +317,10 @@
     </div>
   </section>
 
-  <!-- Desktop Details -->
+  <!-- Phones Details -->
   <section class="bg-white mt-10">
     <div class="flex justify-between items-center px-6 py-4 bg-orange-500 text-white">
-      <h2 class="text-lg font-bold">Desktops</h2>
+      <h2 class="text-lg font-bold">Phones</h2>
       <a href="{{ route('products.index') }}" class="text-sm hover:underline">See All &rarr;</a>
     </div>
     <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4 px-4 sm:px-6 py-6">

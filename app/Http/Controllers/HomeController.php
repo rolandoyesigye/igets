@@ -66,4 +66,31 @@ class HomeController extends Controller
 
         return view('home.orders', compact('orders'));
     }
+
+    public function laptops()
+    {
+        $products = \App\Models\Product::where('category', 'laptops')
+            ->where('is_active', true)
+            ->latest()
+            ->paginate(12);
+        return view('home.laptops', compact('products'));
+    }
+
+    public function accessories()
+    {
+        $products = \App\Models\Product::where('category', 'accessories')
+            ->where('is_active', true)
+            ->latest()
+            ->paginate(12);
+        return view('home.accessories', compact('products'));
+    }
+
+    public function phones()
+    {
+        $products = \App\Models\Product::where('category', 'desktops')
+            ->where('is_active', true)
+            ->latest()
+            ->paginate(12);
+        return view('home.phones', compact('products'));
+    }
 } 
