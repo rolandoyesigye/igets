@@ -48,6 +48,7 @@
       </div>
       @endforelse
     </div
+</div>
 
 
 @include('home.footer')

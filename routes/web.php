@@ -6,6 +6,7 @@ use App\Http\Controllers\HomeController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\CheckoutController;
+use App\Http\Controllers\Admin\UserController;
 
 // Home page route - accessible from root URL
 Route::get('/', [HomeController::class, 'index'])->name('home');
@@ -66,9 +67,18 @@ Route::middleware(['auth', 'dashboard.access'])->group(function () {
         Route::get('/orders/{order}', [\App\Http\Controllers\Admin\OrderController::class, 'show'])->name('orders.show');
         Route::put('/orders/{order}/status', [\App\Http\Controllers\Admin\OrderController::class, 'updateStatus'])->name('orders.update-status');
         Route::get('/orders/filter', [\App\Http\Controllers\Admin\OrderController::class, 'filter'])->name('orders.filter');
+        Route::get('/users', [\App\Http\Controllers\Admin\UserController::class, 'index'])->name('users');
+        Route::delete('/users/{user}', [\App\Http\Controllers\Admin\UserController::class, 'destroy'])->name('user.delete');
     });
+
+    // Route::get('/users', [UserController::class, 'index'])->name('users.index');
+    
 });
 
+
+Route::prefix('admin')->name('admin.')->middleware(['auth'])->group(function () {
+    Route::get('/users', [UserController::class, 'index'])->name('users.index');
+});
 
 
 require __DIR__.'/auth.php';

@@ -18,6 +18,11 @@
             </flux:navlist>
 
             <flux:navlist variant="outline">
+                    <flux:navlist.item icon="users" :href="route('admin.users.index')" :current="request()->routeIs('admin.users.*')" wire:navigate>{{ __('Users') }}</flux:navlist.item>
+                
+            </flux:navlist>
+
+            <flux:navlist variant="outline">
                 <flux:dropdown position="bottom" align="start">
                     <!-- Trigger button inside sidebar navlist -->
                     <flux:navlist.item icon="" icon:trailing="chevron-down" class="cursor-pointer">
