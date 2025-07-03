@@ -7,6 +7,8 @@ use Illuminate\Queue\InteractsWithQueue;
 use App\Models\Cart;
 use App\Models\Product;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Auth\Events\Login;
+use Illuminate\Support\Facades\Session;
 
 class TransferGuestCartToUser
 {
@@ -21,34 +23,31 @@ class TransferGuestCartToUser
     /**
      * Handle the event.
      */
-    public function handle(object $event): void
+    public function handle(Login $event)
     {
-        // Only proceed if user is authenticated
-        $user = $event->user ?? Auth::user();
-        if (!$user) return;
+        $sessionId = Session::getId();
+        $user = $event->user;
 
-        $cart = session('cart', []);
-        foreach ($cart as $productId => $quantity) {
-            $product = Product::find($productId);
-            if ($product && $product->is_active) {
-                $cartItem = Cart::where('user_id', $user->id)
-                    ->where('product_id', $productId)
-                    ->first();
-                if ($cartItem) {
-                    $cartItem->quantity += $quantity;
-                    $cartItem->save();
-                } else {
-                    Cart::create([
-                        'session_id' => session()->getId(),
-                        'user_id' => $user->id,
-                        'product_id' => $productId,
-                        'quantity' => $quantity,
-                        'price' => $product->price,
-                    ]);
-                }
+        // Get all guest cart items for this session
+        $guestCartItems = Cart::where('session_id', $sessionId)->get();
+
+        foreach ($guestCartItems as $item) {
+            // Check if user already has this product in their cart
+            $userCartItem = Cart::where('user_id', $user->id)
+                ->where('product_id', $item->product_id)
+                ->first();
+
+            if ($userCartItem) {
+                // Merge quantities
+                $userCartItem->quantity += $item->quantity;
+                $userCartItem->save();
+                $item->delete(); // Remove guest cart item
+            } else {
+                // Assign guest cart item to user
+                $item->user_id = $user->id;
+                $item->session_id = null;
+                $item->save();
             }
         }
-        // Clear guest cart from session
-        session()->forget('cart');
     }
 }
