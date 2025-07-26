@@ -20,7 +20,7 @@
               </div>
             @endif
             <h3 class="text-sm font-semibold truncate">{{ $accessory->name }}</h3>
-            <p class="text-orange-600 font-bold text-sm">UGX {{ number_format($accessory->price) }}</p>
+            <p class="text-green-600 font-bold text-sm">UGX {{ number_format($accessory->price) }}</p>
             @if($accessory->original_price && $accessory->original_price > $accessory->price)
               <p class="line-through text-xs text-gray-500">UGX {{ number_format($accessory->original_price) }}</p>
             @endif
@@ -31,20 +31,20 @@
                 @csrf
                 <input type="hidden" name="product_id" value="{{ $accessory->id }}">
                 <input type="hidden" name="quantity" value="1">
-                <button type="submit" class="w-full bg-orange-500 text-white text-xs py-1 px-2 rounded hover:bg-orange-600 transition-colors">
+                <button type="submit" class="w-full bg-green-500 text-white text-xs py-1 px-2 rounded hover:bg-green-600 transition-colors">
                   Add to Cart
                 </button>
               </form>
             @else
               <div class="mt-2 text-center">
-                <span class="text-xs text-red-600">Out of Stock</span>
+                <span class="text-xs text-blue-600">Out of Stock</span>
               </div>
             @endif
           </div>
         </a>
       @empty
         <div class="col-span-full text-center py-8">
-          <p class="text-gray-500">No accessories available at the moment.</p>
+          <p class="text-blue-500">No accessories available at the moment.</p>
       </div>
       @endforelse
     </div

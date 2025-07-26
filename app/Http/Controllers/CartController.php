@@ -4,25 +4,28 @@ namespace App\Http\Controllers;
 
 use App\Models\Cart;
 use App\Models\Product;
+use App\Services\CartService;
+use App\Traits\ToastrNotifications;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
 class CartController extends Controller
 {
+    use ToastrNotifications;
+
+    protected $cartService;
+
+    public function __construct(CartService $cartService)
+    {
+        $this->cartService = $cartService;
+    }
+
     /**
      * Display the cart page
      */
     public function index()
     {
-        // Check if user is authenticated
-        if (!Auth::check()) {
-            return redirect()->route('login')->with('error', 'Please log in to view your cart.');
-        }
-
-        $cartItems = Cart::where('user_id', Auth::id())
-                        ->with('product')
-                        ->get();
-
+        $cartItems = $this->cartService->getItems();
         return view('cart.index', compact('cartItems'));
     }
 
@@ -36,76 +39,40 @@ class CartController extends Controller
             'quantity' => 'required|integer|min:1|max:99'
         ]);
 
-        $product = Product::findOrFail($request->product_id);
-        
-        if (!$product->is_active) {
-            return back()->with('error', 'This product is currently out of stock.');
+        try {
+            $this->cartService->add($request->product_id, $request->quantity);
+            return $this->toastSuccess('Product added to cart successfully!');
+        } catch (\Exception $e) {
+            return $this->toastError($e->getMessage());
         }
-
-        if (Auth::check()) {
-            // For authenticated users, save to database
-            $cartItem = Cart::where('user_id', Auth::id())
-                           ->where('product_id', $request->product_id)
-                           ->first();
-
-            if ($cartItem) {
-                $cartItem->update([
-                    'quantity' => $cartItem->quantity + $request->quantity
-                ]);
-            } else {
-                Cart::create([
-                    'session_id' => session()->getId(),
-                    'user_id' => Auth::id(),
-                    'product_id' => $request->product_id,
-                    'quantity' => $request->quantity,
-                    'price' => $product->price
-                ]);
-            }
-        } else {
-            // For guest users, save to session
-            $cart = session('cart', []);
-            $productId = $request->product_id;
-            
-            if (isset($cart[$productId])) {
-                $cart[$productId] += $request->quantity;
-            } else {
-                $cart[$productId] = $request->quantity;
-            }
-            
-            session(['cart' => $cart]);
-        }
-
-        return back();
     }
 
     /**
      * Update cart item quantity
      */
-    public function update(Request $request, Cart $cart)
+    public function update(Request $request, $itemId)
     {
         $request->validate([
             'quantity' => 'required|integer|min:1|max:99'
         ]);
 
-        if (Auth::check() && $cart->user_id === Auth::id()) {
-            $cart->update(['quantity' => $request->quantity]);
-            return back()->with('success', 'Cart updated successfully!');
+        if ($this->cartService->update($itemId, $request->quantity)) {
+            return $this->toastSuccess('Cart updated successfully!');
         }
 
-        return back()->with('error', 'Unauthorized action.');
+        return $this->toastError('Failed to update cart item.');
     }
 
     /**
      * Remove item from cart
      */
-    public function remove(Cart $cart)
+    public function remove($itemId)
     {
-        if (Auth::check() && $cart->user_id === Auth::id()) {
-            $cart->delete();
-            return back()->with('success', 'Item removed from cart!');
+        if ($this->cartService->remove($itemId)) {
+            return $this->toastSuccess('Item removed from cart!');
         }
 
-        return back()->with('error', 'Unauthorized action.');
+        return $this->toastError('Failed to remove item from cart.');
     }
 
     /**
@@ -113,13 +80,8 @@ class CartController extends Controller
      */
     public function clear()
     {
-        if (Auth::check()) {
-            Cart::where('user_id', Auth::id())->delete();
-        } else {
-            session()->forget('cart');
-        }
-
-        return back()->with('success', 'Cart cleared successfully!');
+        $this->cartService->clear();
+        return $this->toastSuccess('Cart cleared successfully!');
     }
 
     /**
@@ -127,15 +89,7 @@ class CartController extends Controller
      */
     public function getCartCount()
     {
-        $count = 0;
-        
-        if (Auth::check()) {
-            $count = Cart::where('user_id', Auth::id())->sum('quantity');
-        } else {
-            $cart = session('cart', []);
-            $count = array_sum($cart);
-        }
-
+        $count = $this->cartService->getCount();
         return response()->json(['count' => $count]);
     }
 } 

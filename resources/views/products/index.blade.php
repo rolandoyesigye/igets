@@ -16,17 +16,7 @@
         </div>
 
         <!-- Flash Messages -->
-        @if(session('success'))
-            <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded mb-6" role="alert">
-                <span class="block sm:inline">{{ session('success') }}</span>
-            </div>
-        @endif
 
-        @if(session('error'))
-            <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-6" role="alert">
-                <span class="block sm:inline">{{ session('error') }}</span>
-            </div>
-        @endif
 
         <!-- DataTable Container -->
         <div class="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700">
@@ -63,7 +53,7 @@
                                 <td class="py-3 px-4">
                                     <div>
                                         <div class="font-medium text-gray-900 dark:text-white">
-                                            <a href="{{ route('home.show', $product) }}" class="hover:text-orange-600 transition-colors">
+                                            <a href="{{ route('home.show', $product) }}" class="hover:text-blue-600 transition-colors">
                                                 {{ $product->name }}
                                             </a>
                                         </div>
@@ -92,8 +82,8 @@
                                 <td class="py-3 px-4">
                                     <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium 
                                         {{ $product->stock_quantity > 10 ? 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200' : 
-                                           ($product->stock_quantity > 0 ? 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200' : 
-                                            'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200') }}">
+                                           ($product->stock_quantity > 0 ? 'bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200' : 
+                                            'bg-blue-50 text-blue-400 dark:bg-blue-900 dark:text-blue-200') }}">
                                         {{ $product->stock_quantity }} in stock
                                     </span>
                                 </td>

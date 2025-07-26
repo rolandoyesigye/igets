@@ -22,17 +22,17 @@
                             <td class="px-6 py-4">UGX {{ number_format($order->total) }}</td>
                             <td class="px-6 py-4">
                                 <span class="inline-flex px-2 py-1 text-xs font-semibold rounded-full
-                                    @if($order->status == 'pending') bg-yellow-100 text-yellow-800
-                                    @elseif($order->status == 'processing') bg-blue-100 text-blue-800
-                                    @elseif($order->status == 'shipped') bg-purple-100 text-purple-800
+                                    @if($order->status == 'pending') bg-blue-100 text-blue-800
+                                    @elseif($order->status == 'processing') bg-blue-200 text-blue-900
+                                    @elseif($order->status == 'shipped') bg-blue-300 text-blue-900
                                     @elseif($order->status == 'delivered') bg-green-100 text-green-800
-                                    @elseif($order->status == 'cancelled') bg-red-100 text-red-800
+                                    @elseif($order->status == 'cancelled') bg-blue-50 text-blue-400
                                     @endif">
                                     {{ ucfirst($order->status) }}
                                 </span>
                             </td>
                             <td class="px-6 py-4">
-                                <a href="{{ route('checkout.success', $order) }}" class="text-orange-600 hover:underline">View</a>
+                                <a href="{{ route('checkout.success', $order) }}" class="text-blue-600 hover:underline">View</a>
                             </td>
                         </tr>
                     @endforeach
@@ -43,7 +43,7 @@
             {{ $orders->links() }}
         </div>
     @else
-        <p class="text-gray-600">You have not placed any orders yet.</p>
+        <p class="text-blue-600">You have not placed any orders yet.</p>
     @endif
 </div>
 

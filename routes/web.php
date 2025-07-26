@@ -7,6 +7,7 @@ use App\Http\Controllers\ProductController;
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\CheckoutController;
 use App\Http\Controllers\Admin\UserController;
+use App\Http\Controllers\Auth\SocialiteController;
 
 // Home page route - accessible from root URL
 Route::get('/', [HomeController::class, 'index'])->name('home');
@@ -31,12 +32,14 @@ Route::get('/home/phones', [HomeController::class, 'phones'])->name('home.phones
 // Cart routes
 Route::post('/cart/add', [CartController::class, 'add'])->name('cart.add'); // Open for everyone
 
-// Protected cart routes - require authentication
+// Cart routes - accessible to all users
+Route::get('/cart', [CartController::class, 'index'])->name('cart.index');
+Route::put('/cart/{itemId}/update', [CartController::class, 'update'])->name('cart.update');
+Route::delete('/cart/{itemId}/remove', [CartController::class, 'remove'])->name('cart.remove');
+Route::delete('/cart/clear', [CartController::class, 'clear'])->name('cart.clear');
+
+// Protected checkout routes - require authentication
 Route::middleware(['auth'])->group(function () {
-    Route::get('/cart', [CartController::class, 'index'])->name('cart.index');
-    Route::put('/cart/{cart}/update', [CartController::class, 'update'])->name('cart.update');
-    Route::delete('/cart/{cart}/remove', [CartController::class, 'remove'])->name('cart.remove');
-    Route::delete('/cart/clear', [CartController::class, 'clear'])->name('cart.clear');
     Route::get('/checkout', [CheckoutController::class, 'index'])->name('checkout.index');
     Route::post('/checkout', [CheckoutController::class, 'store'])->name('checkout.store');
     Route::get('/checkout/success/{order}', [CheckoutController::class, 'success'])->name('checkout.success');
@@ -86,5 +89,7 @@ Route::prefix('admin')->name('admin.')->middleware(['auth'])->group(function () 
     // Route::get('/users', [UserController::class, 'index'])->name('users.index');
 });
 
+Route::get('auth/google', [SocialiteController::class, 'redirectToGoogle'])->name('auth.google');
+Route::get('auth/google/callback', [SocialiteController::class, 'handleGoogleCallback']);
 
 require __DIR__.'/auth.php';

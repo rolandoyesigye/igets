@@ -1,4 +1,4 @@
 
 <div class="ms-1 grid flex-1 text-start text-md">
-    <span class="mb-0.5 truncate leading-tight font-semibold">iGets</span>
+    <span class="mb-0.5 truncate leading-tight font-semibold">iGet</span>
 </div>

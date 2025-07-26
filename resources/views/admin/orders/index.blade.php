@@ -47,7 +47,7 @@
 
                 <!-- Orders Table -->
                 <div class="overflow-x-auto">
-                    <table class="min-w-full divide-y divide-gray-200">
+                    <table id="ordersTable" class="min-w-full divide-y divide-gray-200">
                         <thead class="bg-gray-50">
                             <tr>
                                 <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Order</th>
@@ -105,13 +105,26 @@
                     </table>
                 </div>
 
-                <!-- Pagination -->
-                <div class="mt-6">
-                    {{ $orders->links() }}
-                </div>
+                <!-- Pagination removed because DataTables will handle it -->
             </div>
         </div>
     </div>
 </div>
+
+<!-- DataTables CSS/JS -->
+<link rel="stylesheet" href="https://cdn.datatables.net/1.13.7/css/jquery.dataTables.min.css">
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+<script src="https://cdn.datatables.net/1.13.7/js/jquery.dataTables.min.js"></script>
+
+<script>
+    $(document).ready(function() {
+        $('#ordersTable').DataTable({
+            pageLength: 10,
+            order: [], // disable initial ordering
+            language: {
+                search: "Search orders:"
+            }
+        });
+    });
+</script>
 </x-layouts.app>
- 

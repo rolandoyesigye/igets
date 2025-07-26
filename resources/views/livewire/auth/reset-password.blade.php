@@ -72,7 +72,7 @@ new #[Layout('components.layouts.auth')] class extends Component {
     <x-auth-header :title="__('Reset password')" :description="__('Please enter your new password below')" />
 
     <!-- Session Status -->
-    <x-auth-session-status class="text-center" :status="session('status')" />
+    
 
     <form wire:submit="resetPassword" class="flex flex-col gap-6">
         <!-- Email Address -->

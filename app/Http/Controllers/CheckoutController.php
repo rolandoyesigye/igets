@@ -5,19 +5,21 @@ namespace App\Http\Controllers;
 use App\Models\Cart;
 use App\Models\Order;
 use App\Models\OrderItem;
+use App\Traits\ToastrNotifications;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
 class CheckoutController extends Controller
 {
+    use ToastrNotifications;
     /**
      * Display the checkout page
      */
     public function index()
     {
         if (!Auth::check()) {
-            return redirect()->route('login')->with('error', 'Please log in to checkout.');
+            return $this->toastErrorRedirect('Please log in to checkout.', 'login');
         }
 
         $cartItems = Cart::where('user_id', Auth::id())
@@ -25,7 +27,7 @@ class CheckoutController extends Controller
                         ->get();
 
         if ($cartItems->isEmpty()) {
-            return redirect()->route('cart.index')->with('error', 'Your cart is empty.');
+            return $this->toastErrorRedirect('Your cart is empty.', 'cart.index');
         }
 
         // Calculate totals
@@ -45,7 +47,7 @@ class CheckoutController extends Controller
     public function store(Request $request)
     {
         if (!Auth::check()) {
-            return redirect()->route('login')->with('error', 'Please log in to checkout.');
+            return $this->toastErrorRedirect('Please log in to checkout.', 'login');
         }
 
         $request->validate([
@@ -64,7 +66,7 @@ class CheckoutController extends Controller
                         ->get();
 
         if ($cartItems->isEmpty()) {
-            return redirect()->route('cart.index')->with('error', 'Your cart is empty.');
+            return $this->toastErrorRedirect('Your cart is empty.', 'cart.index');
         }
 
         // Calculate totals
@@ -116,7 +118,7 @@ class CheckoutController extends Controller
 
         } catch (\Exception $e) {
             DB::rollBack();
-            return back()->with('error', 'An error occurred while processing your order. Please try again.');
+            return $this->toastError('An error occurred while processing your order. Please try again.');
         }
     }
 

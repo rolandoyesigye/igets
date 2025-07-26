@@ -4,11 +4,8 @@ namespace App\Listeners;
 
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Queue\InteractsWithQueue;
-use App\Models\Cart;
-use App\Models\Product;
-use Illuminate\Support\Facades\Auth;
+use App\Services\CartService;
 use Illuminate\Auth\Events\Login;
-use Illuminate\Support\Facades\Session;
 
 class TransferGuestCartToUser
 {
@@ -25,29 +22,12 @@ class TransferGuestCartToUser
      */
     public function handle(Login $event)
     {
-        $sessionId = Session::getId();
-        $user = $event->user;
-
-        // Get all guest cart items for this session
-        $guestCartItems = Cart::where('session_id', $sessionId)->get();
-
-        foreach ($guestCartItems as $item) {
-            // Check if user already has this product in their cart
-            $userCartItem = Cart::where('user_id', $user->id)
-                ->where('product_id', $item->product_id)
-                ->first();
-
-            if ($userCartItem) {
-                // Merge quantities
-                $userCartItem->quantity += $item->quantity;
-                $userCartItem->save();
-                $item->delete(); // Remove guest cart item
-            } else {
-                // Assign guest cart item to user
-                $item->user_id = $user->id;
-                $item->session_id = null;
-                $item->save();
-            }
+        // Get session cart data before it gets cleared
+        $sessionCart = session('cart', []);
+        
+        if (!empty($sessionCart)) {
+            $cartService = new CartService();
+            $cartService->transferSessionToUser($event->user->id);
         }
     }
 }

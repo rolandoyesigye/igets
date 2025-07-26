@@ -3,12 +3,14 @@
 namespace App\Http\Controllers;
 
 use App\Models\Product;
+use App\Traits\ToastrNotifications;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 
 class ProductController extends Controller
 {
+    use ToastrNotifications;
     /**
      * Display a listing of the resource.
      */
@@ -71,7 +73,7 @@ class ProductController extends Controller
 
         Product::create($data);
 
-        return redirect()->route('products.index')->with('success', 'Product created successfully!');
+        return $this->toastSuccessRedirect('Product created successfully!', 'products.index');
     }
 
     /**
@@ -132,7 +134,7 @@ class ProductController extends Controller
 
         $product->update($data);
 
-        return redirect()->route('products.index')->with('success', 'Product updated successfully!');
+        return $this->toastSuccessRedirect('Product updated successfully!', 'products.index');
     }
 
     /**
@@ -147,6 +149,6 @@ class ProductController extends Controller
 
         $product->delete();
 
-        return redirect()->route('products.index')->with('success', 'Product deleted successfully!');
+        return $this->toastSuccessRedirect('Product deleted successfully!', 'products.index');
     }
 }
