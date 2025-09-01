@@ -40,7 +40,7 @@ class ProductController extends Controller
             'original_price' => 'nullable|numeric|min:0',
             'brand' => 'nullable|string|max:255',
             'category' => 'required|string|max:255',
-            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp',
             'sku' => 'nullable|string|unique:products,sku',
             'stock_quantity' => 'nullable|integer|min:0',
             'condition' => 'nullable|string|in:new,used,refurbished',

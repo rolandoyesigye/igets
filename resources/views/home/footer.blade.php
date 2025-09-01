@@ -72,8 +72,8 @@
     <!-- Copyright -->
     <div class="border-t border-blue-700 mt-8 pt-6">
       <div class="container mx-auto text-center text-sm text-blue-300">
-        <p>&copy; 2025 iGET Technologies. All Rights Reserved. Designed by 
-          <a href="#" class="underline hover:text-white transition-colors">Oyerol Tech</a>
+        <p>
+          &copy; 2025 iGET Technologies. All Rights Reserved.
         </p>
       </div>
     </div>

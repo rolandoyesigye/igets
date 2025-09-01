@@ -64,8 +64,8 @@ Route::middleware(['auth', 'dashboard.access'])->group(function () {
     Volt::route('settings/password', 'settings.password')->name('settings.password');
     Volt::route('settings/appearance', 'settings.appearance')->name('settings.appearance');
 
-    // Admin Management Routes
-    Route::prefix('admin')->name('admin.')->group(function () {
+    // Admin Management Routes - restricted to admin role only
+    Route::prefix('admin')->name('admin.')->middleware(['role:admin'])->group(function () {
         // Order Management
         Route::get('/orders', [\App\Http\Controllers\Admin\OrderController::class, 'index'])->name('orders.index');
         Route::get('/orders/{order}', [\App\Http\Controllers\Admin\OrderController::class, 'show'])->name('orders.show');
@@ -82,12 +82,7 @@ Route::middleware(['auth', 'dashboard.access'])->group(function () {
 });
 
 
-Route::prefix('admin')->name('admin.')->middleware(['auth'])->group(function () {
-    // This route is already defined above with more specific middleware,
-    // so we can consider removing this duplicate or ensuring it's needed.
-    // For now, I'm keeping it as is to avoid breaking any other functionality.
-    // Route::get('/users', [UserController::class, 'index'])->name('users.index');
-});
+// Duplicate admin prefix group removed; routes are defined above with proper middleware
 
 Route::get('auth/google', [SocialiteController::class, 'redirectToGoogle'])->name('auth.google');
 Route::get('auth/google/callback', [SocialiteController::class, 'handleGoogleCallback']);
