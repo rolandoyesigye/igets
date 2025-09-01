@@ -11,8 +11,8 @@
                 </div>
 
                 <!-- Search and Filter -->
-                <div class="mb-6 bg-gray-50 p-4 rounded-lg">
-                    <form action="{{ route('admin.orders.filter') }}" method="GET" class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <!-- <div class="mb-6 bg-gray-50 p-4 rounded-lg">
+                    <form action="{{ route('admin.orders.index') }}" method="GET" class="grid grid-cols-1 md:grid-cols-3 gap-4">
                         <div>
                             <label class="block text-sm font-medium text-gray-700 mb-1">Search</label>
                             <input type="text" 
@@ -43,19 +43,19 @@
                             @endif
                         </div>
                     </form>
-                </div>
+                </div> -->
 
                 <!-- Orders Table -->
                 <div class="overflow-x-auto">
                     <table id="ordersTable" class="min-w-full divide-y divide-gray-200">
-                        <thead class="bg-gray-50">
+                        <thead class="bg-gray-100">
                             <tr>
-                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Order</th>
-                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Customer</th>
-                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Total</th>
-                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
-                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Date</th>
-                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-600 uppercase tracking-wider">Order</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-600 uppercase tracking-wider">Customer</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-600 uppercase tracking-wider">Total</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-600 uppercase tracking-wider">Status</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-600 uppercase tracking-wider">Date</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-600 uppercase tracking-wider">Actions</th>
                             </tr>
                         </thead>
                         <tbody class="bg-white divide-y divide-gray-200">
@@ -105,26 +105,35 @@
                     </table>
                 </div>
 
-                <!-- Pagination removed because DataTables will handle it -->
+                <!-- Laravel Pagination (for backup if DataTables is disabled) -->
+                <div class="mt-4">
+                    {{ $orders->appends(request()->query())->links() }}
+                </div>
             </div>
         </div>
     </div>
 </div>
 
 <!-- DataTables CSS/JS -->
-<!-- <link rel="stylesheet" href="https://cdn.datatables.net/1.13.7/css/jquery.dataTables.min.css"> -->
+<link rel="stylesheet" href="https://cdn.datatables.net/1.13.7/css/jquery.dataTables.min.css">
 <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
-<!-- <script src="https://cdn.datatables.net/1.13.7/js/jquery.dataTables.min.js"></script> -->
+<script src="https://cdn.datatables.net/1.13.7/js/jquery.dataTables.min.js"></script>
 
-<!-- <script>
+<script>
     $(document).ready(function() {
         $('#ordersTable').DataTable({
             pageLength: 10,
             order: [], // disable initial ordering
             language: {
-                search: "Search orders:"
+                search: "Search orders:",
+                lengthMenu: "Show _MENU_ orders per page",
+                info: "Showing _START_ to _END_ of _TOTAL_ orders",
+                paginate: {
+                    previous: "Prev",
+                    next: "Next"
+                }
             }
         });
     });
-</script> -->
+</script>
 </x-layouts.app>
