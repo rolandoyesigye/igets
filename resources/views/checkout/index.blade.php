@@ -18,7 +18,7 @@
             </div>
             <div>
                 <label class="block text-blue-700 font-medium mb-1">Email</label>
-                <input type="email" name="email" value="{{ old('email', auth()->user()->email ?? '') }}" class="w-full border border-blue-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-500" required>
+                <input type="email" name="email" value="{{ old('email', auth()->user()->email ?? '') }}" class="w-full border border-blue-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-500">
             </div>
             <div>
                 <label class="block text-blue-700 font-medium mb-1">Phone</label>
@@ -34,7 +34,7 @@
             </div>
             <div>
                 <label class="block text-blue-700 font-medium mb-1">Postal Code</label>
-                <input type="text" name="postal_code" value="{{ old('postal_code') }}" class="w-full border border-blue-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-500" required>
+                <input type="text" name="postal_code" value="{{ old('postal_code') }}" class="w-full border border-blue-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-500">
             </div>
         </div>
 
