@@ -6,6 +6,8 @@ use App\Http\Controllers\HomeController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\CheckoutController;
+use App\Http\Controllers\AccountController;
+use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Auth\SocialiteController;
 
@@ -49,6 +51,16 @@ Route::middleware(['auth'])->group(function () {
 Route::get('/profile', function () {
     return view('profile.edit');
 })->name('profile');
+
+// Account Settings routes - require authentication
+Route::middleware(['auth'])->group(function () {
+    Route::get('/account/settings', [AccountController::class, 'index'])->name('account.settings');
+    Route::put('/account/profile', [AccountController::class, 'updateProfile'])->name('account.profile.update');
+    
+    // Profile Settings routes
+    Route::get('/profile/settings', [ProfileController::class, 'index'])->name('profile.settings');
+    Route::put('/profile/password', [ProfileController::class, 'updatePassword'])->name('profile.password.update');
+});
 
 // Product routes using ProductController
 Route::resource('products', ProductController::class);
