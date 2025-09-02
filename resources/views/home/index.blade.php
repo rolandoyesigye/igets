@@ -195,7 +195,6 @@
       <a href="{{ route('home.laptops') }}" class="text-sm hover:underline">See All &rarr;</a>
   </div>
     <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4 px-4 sm:px-6 py-6">
-      
       @forelse($laptops as $laptop)
     <!-- Product Card -->
         <a href="{{ route('home.show', $laptop) }}" class="block">

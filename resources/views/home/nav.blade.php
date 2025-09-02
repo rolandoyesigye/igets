@@ -28,10 +28,9 @@
         <a href="{{ route('home.laptops') }}" class="text-blue-700 hover:text-green-500">Laptops</a>
         <a href="{{ route('home.accessories') }}" class="text-blue-700 hover:text-green-500">Accessories</a>
         <a href="{{ route('home.phones') }}" class="text-blue-700 hover:text-green-500">Phones</a>
-        <div class="relative">
-          <input type="text" placeholder="Search" class="px-3 py-1 border border-blue-300 rounded-l-md focus:outline-none"/>
-          <button class="absolute top-0 right-0 bg-green-500 text-white px-3 py-1 rounded-r-md">Go</button>
-        </div>
+
+        <livewire:product-search />
+
       </nav>
 
       <!-- Auth Buttons (md+) -->
@@ -147,6 +146,10 @@
         <a href="{{ route('home.laptops') }}" class="block text-blue-700 hover:text-green-500">Laptops</a>
         <a href="{{ route('home.accessories') }}" class="block text-blue-700 hover:text-green-500">Accessories</a>
         <a href="{{ route('home.phones') }}" class="block text-blue-700 hover:text-green-500">Phones</a>
+
+        <div class="mt-3">
+          <livewire:product-search />
+        </div>
         
         <!-- Cart link for mobile -->
         <a href="{{ Auth::check() ? route('cart.index') : route('login') }}" class="block text-blue-700 hover:text-green-500 flex items-center">

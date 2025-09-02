@@ -5,6 +5,7 @@ namespace App\Services;
 use App\Models\Cart;
 use App\Models\Product;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 class CartService
 {
@@ -236,4 +237,21 @@ class CartService
             return array_sum($cart);
         }
     }
-} 
+
+    public function transferSessionToUser(int $userId): void
+    {
+        $sessionCart = session('cart', []);
+
+        if (!empty($sessionCart)) {
+            foreach ($sessionCart as $productId => $quantity) {
+                Cart::updateOrCreate(
+                    ['user_id' => $userId, 'product_id' => $productId],
+                    ['quantity' => \DB::raw("quantity + $quantity")]
+                );
+            }
+
+            // Clear session cart
+            session()->forget('cart');
+        }
+    }
+}
