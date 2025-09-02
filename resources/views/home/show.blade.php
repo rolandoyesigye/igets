@@ -82,15 +82,21 @@
                     </div>
                 @endif
                 <div class="flex justify-between">
-                    <span class="text-gray-600">Status:</span>
-                    <span class="font-semibold {{ $product->is_active ? 'text-green-600' : 'text-red-600' }}">
-                        {{ $product->is_active ? 'In Stock' : 'Out of Stock' }}
+                    <span class="text-gray-600">Stock Status:</span>
+                    <span class="font-semibold {{ $product->stock_status_color }}">
+                        {{ $product->stock_status }}
                     </span>
                 </div>
+                @if($product->stock_quantity > 0)
+                <div class="flex justify-between">
+                    <span class="text-gray-600">Available Quantity:</span>
+                    <span class="font-semibold text-blue-600">{{ $product->stock_quantity }}</span>
+                </div>
+                @endif
             </div>
 
             <!-- Add to Cart Button -->
-            @if($product->is_active)
+            @if($product->isInStock())
                 <form action="{{ route('cart.add') }}" method="POST" class="space-y-4">
                     @csrf
                     <input type="hidden" name="product_id" value="{{ $product->id }}">
@@ -101,7 +107,7 @@
                                name="quantity" 
                                value="1" 
                                min="1" 
-                               max="99"
+                               max="{{ $product->stock_quantity }}"
                                class="w-20 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500">
                     </div>
                     <button type="submit" 

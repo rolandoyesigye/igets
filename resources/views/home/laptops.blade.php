@@ -26,8 +26,11 @@
               <p class="line-through text-xs text-blue-500">UGX {{ number_format($laptop->original_price) }}</p>
             @endif
             
+            <!-- Stock Status -->
+            <p class="text-xs {{ $laptop->stock_status_color }} font-medium">{{ $laptop->stock_status }}</p>
+            
             <!-- Add to Cart Button -->
-            @if($laptop->is_active)
+            @if($laptop->isInStock())
               <form action="{{ route('cart.add') }}" method="POST" class="mt-2" onclick="event.stopPropagation();">
                 @csrf
                 <input type="hidden" name="product_id" value="{{ $laptop->id }}">
@@ -38,7 +41,7 @@
               </form>
             @else
               <div class="mt-2 text-center">
-                <span class="text-xs text-blue-600">Out of Stock</span>
+                <span class="text-xs text-red-600 font-medium">Out of Stock</span>
               </div>
             @endif
           </div>

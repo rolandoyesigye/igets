@@ -71,6 +71,11 @@ class ProductController extends Controller
         $data['is_active'] = $request->has('is_active');
         $data['is_featured'] = $request->has('is_featured');
 
+        // Automatically set is_active to false if stock is 0
+        if (isset($data['stock_quantity']) && $data['stock_quantity'] <= 0) {
+            $data['is_active'] = false;
+        }
+
         Product::create($data);
 
         return $this->toastSuccessRedirect('Product created successfully!', 'products.index');
@@ -131,6 +136,11 @@ class ProductController extends Controller
         // Set default values
         $data['is_active'] = $request->has('is_active');
         $data['is_featured'] = $request->has('is_featured');
+
+        // Automatically set is_active to false if stock is 0
+        if (isset($data['stock_quantity']) && $data['stock_quantity'] <= 0) {
+            $data['is_active'] = false;
+        }
 
         $product->update($data);
 

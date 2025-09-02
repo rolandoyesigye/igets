@@ -35,6 +35,58 @@ class Product extends Model
         'specifications' => 'array',
     ];
 
+    protected static function boot()
+    {
+        parent::boot();
+
+        // Automatically update is_active based on stock quantity
+        static::saving(function ($product) {
+            if ($product->stock_quantity <= 0) {
+                $product->is_active = false;
+            }
+        });
+    }
+
+    /**
+     * Check if product is out of stock
+     */
+    public function isOutOfStock()
+    {
+        return $this->stock_quantity <= 0;
+    }
+
+    /**
+     * Check if product is in stock
+     */
+    public function isInStock()
+    {
+        return $this->stock_quantity > 0;
+    }
+
+    /**
+     * Get stock status text
+     */
+    public function getStockStatusAttribute()
+    {
+        if ($this->isOutOfStock()) {
+            return 'Out of Stock';
+        }
+        
+        return 'In Stock';
+    }
+
+    /**
+     * Get stock status color class
+     */
+    public function getStockStatusColorAttribute()
+    {
+        if ($this->isOutOfStock()) {
+            return 'text-red-600';
+        }
+        
+        return 'text-green-600';
+    }
+
     /**
      * Get the formatted price
      */
@@ -95,5 +147,21 @@ class Product extends Model
     public function scopeByCategory($query, $category)
     {
         return $query->where('category', $category);
+    }
+
+    /**
+     * Scope for in-stock products
+     */
+    public function scopeInStock($query)
+    {
+        return $query->where('stock_quantity', '>', 0);
+    }
+
+    /**
+     * Scope for out-of-stock products
+     */
+    public function scopeOutOfStock($query)
+    {
+        return $query->where('stock_quantity', '<=', 0);
     }
 }

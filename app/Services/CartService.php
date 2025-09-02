@@ -15,8 +15,18 @@ class CartService
     {
         $product = Product::findOrFail($productId);
         
+        // Check if product is active and in stock
         if (!$product->is_active) {
-            throw new \Exception('This product is currently out of stock.');
+            throw new \Exception('This product is currently unavailable.');
+        }
+
+        if ($product->isOutOfStock()) {
+            throw new \Exception('This product is out of stock.');
+        }
+
+        // Check if requested quantity is available
+        if ($product->stock_quantity < $quantity) {
+            throw new \Exception('Only ' . $product->stock_quantity . ' items available in stock.');
         }
 
         if (Auth::check()) {
@@ -36,8 +46,15 @@ class CartService
                        ->first();
 
         if ($cartItem) {
+            $newQuantity = $cartItem->quantity + $quantity;
+            
+            // Check if total quantity exceeds available stock
+            if ($newQuantity > $product->stock_quantity) {
+                throw new \Exception('Cannot add more items. Only ' . $product->stock_quantity . ' items available in stock.');
+            }
+            
             $cartItem->update([
-                'quantity' => $cartItem->quantity + $quantity
+                'quantity' => $newQuantity
             ]);
         } else {
             Cart::create([
@@ -59,12 +76,15 @@ class CartService
         $cart = session('cart', []);
         $productId = $product->id;
         
-        if (isset($cart[$productId])) {
-            $cart[$productId] += $quantity;
-        } else {
-            $cart[$productId] = $quantity;
+        $currentQuantity = isset($cart[$productId]) ? $cart[$productId] : 0;
+        $newQuantity = $currentQuantity + $quantity;
+        
+        // Check if total quantity exceeds available stock
+        if ($newQuantity > $product->stock_quantity) {
+            throw new \Exception('Cannot add more items. Only ' . $product->stock_quantity . ' items available in stock.');
         }
         
+        $cart[$productId] = $newQuantity;
         session(['cart' => $cart]);
         return true;
     }
@@ -75,37 +95,39 @@ class CartService
     public function getItems()
     {
         if (Auth::check()) {
-            return Cart::where('user_id', Auth::id())
-                      ->with('product')
-                      ->get();
+            return Cart::with('product')
+                      ->where('user_id', Auth::id())
+                      ->get()
+                      ->map(function ($item) {
+                          // Check if product is still available
+                          if (!$item->product || !$item->product->is_active || $item->product->isOutOfStock()) {
+                              $item->product_available = false;
+                          } else {
+                              $item->product_available = true;
+                          }
+                          return $item;
+                      });
         } else {
-            return $this->getSessionItems();
-        }
-    }
-
-    /**
-     * Get session cart items with product details
-     */
-    private function getSessionItems()
-    {
-        $cart = session('cart', []);
-        $items = collect();
-
-        foreach ($cart as $productId => $quantity) {
-            $product = Product::find($productId);
-            if ($product) {
-                $items->push((object) [
-                    'id' => 'session_' . $productId,
-                    'product_id' => $productId,
-                    'quantity' => $quantity,
-                    'price' => $product->price,
-                    'product' => $product,
-                    'is_session_item' => true
-                ]);
+            $cart = session('cart', []);
+            $items = collect();
+            
+            foreach ($cart as $productId => $quantity) {
+                $product = Product::find($productId);
+                if ($product) {
+                    $item = (object) [
+                        'id' => $productId,
+                        'product_id' => $productId,
+                        'quantity' => $quantity,
+                        'price' => $product->price,
+                        'product' => $product,
+                        'product_available' => $product->is_active && !$product->isOutOfStock()
+                    ];
+                    $items->push($item);
+                }
             }
+            
+            return $items;
         }
-
-        return $items;
     }
 
     /**
@@ -114,25 +136,41 @@ class CartService
     public function update($itemId, $quantity)
     {
         if (Auth::check()) {
-            $cartItem = Cart::findOrFail($itemId);
-            if ($cartItem->user_id === Auth::id()) {
-                $cartItem->update(['quantity' => $quantity]);
-                return true;
+            $cartItem = Cart::find($itemId);
+            if (!$cartItem || $cartItem->user_id !== Auth::id()) {
+                return false;
             }
-        } else {
-            // Handle session cart update
-            if (str_starts_with($itemId, 'session_')) {
-                $productId = str_replace('session_', '', $itemId);
-                $cart = session('cart', []);
-                if (isset($cart[$productId])) {
-                    $cart[$productId] = $quantity;
-                    session(['cart' => $cart]);
-                    return true;
-                }
-            }
-        }
 
-        return false;
+            $product = $cartItem->product;
+            if (!$product || !$product->is_active || $product->isOutOfStock()) {
+                return false;
+            }
+
+            if ($quantity > $product->stock_quantity) {
+                throw new \Exception('Only ' . $product->stock_quantity . ' items available in stock.');
+            }
+
+            $cartItem->update(['quantity' => $quantity]);
+            return true;
+        } else {
+            $cart = session('cart', []);
+            if (!isset($cart[$itemId])) {
+                return false;
+            }
+
+            $product = Product::find($itemId);
+            if (!$product || !$product->is_active || $product->isOutOfStock()) {
+                return false;
+            }
+
+            if ($quantity > $product->stock_quantity) {
+                throw new \Exception('Only ' . $product->stock_quantity . ' items available in stock.');
+            }
+
+            $cart[$itemId] = $quantity;
+            session(['cart' => $cart]);
+            return true;
+        }
     }
 
     /**
@@ -141,22 +179,23 @@ class CartService
     public function remove($itemId)
     {
         if (Auth::check()) {
-            $cartItem = Cart::findOrFail($itemId);
-            if ($cartItem->user_id === Auth::id()) {
+            $cartItem = Cart::where('id', $itemId)
+                           ->where('user_id', Auth::id())
+                           ->first();
+            
+            if ($cartItem) {
                 $cartItem->delete();
                 return true;
             }
         } else {
-            // Handle session cart removal
-            if (str_starts_with($itemId, 'session_')) {
-                $productId = str_replace('session_', '', $itemId);
-                $cart = session('cart', []);
-                unset($cart[$productId]);
+            $cart = session('cart', []);
+            if (isset($cart[$itemId])) {
+                unset($cart[$itemId]);
                 session(['cart' => $cart]);
                 return true;
             }
         }
-
+        
         return false;
     }
 
@@ -170,7 +209,19 @@ class CartService
         } else {
             session()->forget('cart');
         }
+        
         return true;
+    }
+
+    /**
+     * Get cart total
+     */
+    public function getTotal()
+    {
+        $items = $this->getItems();
+        return $items->sum(function ($item) {
+            return $item->price * $item->quantity;
+        });
     }
 
     /**
@@ -184,40 +235,5 @@ class CartService
             $cart = session('cart', []);
             return array_sum($cart);
         }
-    }
-
-    /**
-     * Transfer session cart to user cart
-     */
-    public function transferSessionToUser($userId)
-    {
-        $sessionCart = session('cart', []);
-        
-        foreach ($sessionCart as $productId => $quantity) {
-            $product = Product::find($productId);
-            if ($product) {
-                // Check if user already has this product
-                $userCartItem = Cart::where('user_id', $userId)
-                    ->where('product_id', $productId)
-                    ->first();
-
-                if ($userCartItem) {
-                    // Merge quantities
-                    $userCartItem->quantity += $quantity;
-                    $userCartItem->save();
-                } else {
-                    // Create new cart item
-                    Cart::create([
-                        'user_id' => $userId,
-                        'product_id' => $productId,
-                        'quantity' => $quantity,
-                        'price' => $product->price
-                    ]);
-                }
-            }
-        }
-        
-        // Clear session cart
-        session()->forget('cart');
     }
 } 
