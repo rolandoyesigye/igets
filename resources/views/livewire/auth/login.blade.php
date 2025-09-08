@@ -73,7 +73,8 @@ new #[Layout('components.layouts.auth')] class extends Component {
     }
 }; ?>
 
-<div class="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 via-white to-purple-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 py-12 px-4 sm:px-6 lg:px-8">
+
+<div class="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 via-white to-purple-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 py-12 px-4 sm:px-6 lg:px-6">
     <div class="max-w-md w-full space-y-8">
         <!-- Logo and Header Section -->
         <div class="text-center">
@@ -123,8 +124,17 @@ new #[Layout('components.layouts.auth')] class extends Component {
                 <!-- Password -->
                 <div>
                     <label for="password" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                        {{ __('Password') }}
+                        {{ __('Password') }}  
+                  
+                    @if (Route::has('password.request'))
+                        <!-- <div class="text-sm"> -->
+                            <a href="{{ route('password.request') }}" class="font-medium text-blue-600 hover:text-blue-500 dark:text-blue-400 dark:hover:text-blue-300 transition duration-200">
+                                {{ __('Forgot your password?') }}
+                            </a>
+                        <!-- </div> -->
+                    @endif
                     </label>
+                </div>
                     <div class="relative">
                         <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                             <svg class="h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -165,17 +175,12 @@ new #[Layout('components.layouts.auth')] class extends Component {
                             {{ __('Remember me') }}
                         </label>
                     </div>
-
-                    @if (Route::has('password.request'))
-                        <div class="text-sm">
-                            <a href="{{ route('password.request') }}" class="font-medium text-blue-600 hover:text-blue-500 dark:text-blue-400 dark:hover:text-blue-300 transition duration-200">
-                                {{ __('Forgot your password?') }}
-                            </a>
-                        </div>
-                    @endif
                 </div>
 
+                   
+
                 <!-- Submit Button -->
+
                 <div>
                     <button
                         type="submit"

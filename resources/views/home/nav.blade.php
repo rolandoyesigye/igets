@@ -76,9 +76,9 @@
             </svg>
           </button>
 
-          <div 
-            x-show="open" 
-            x-transition 
+          <div
+            x-show="open"
+            x-transition
             class="absolute right-0 mt-2 w-48 bg-white border rounded shadow-lg z-10"
           >
             <a href="{{ route('home.orders') }}" class="flex items-center px-4 py-2 text-blue-700 hover:bg-blue-100">
@@ -150,7 +150,7 @@
         <div class="mt-3">
           <livewire:product-search />
         </div>
-        
+
         <!-- Cart link for mobile -->
         <a href="{{ Auth::check() ? route('cart.index') : route('login') }}" class="block text-blue-700 hover:text-green-500 flex items-center">
           <svg class="h-5 w-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -172,7 +172,7 @@
             </span>
           @endif
         </a>
-        
+
         <div class="pt-4 border-t">
           @if (Route::has('login'))
             @auth

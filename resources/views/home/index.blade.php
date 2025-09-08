@@ -194,7 +194,7 @@
       <h2 class="text-lg font-bold">Laptops</h2>
       <a href="{{ route('home.laptops') }}" class="text-sm hover:underline">See All &rarr;</a>
   </div>
-    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4 px-4 sm:px-6 py-6">
+    <div class="flex flex-wrap gap-4 px-4 sm:px-6 py-6">
       @forelse($laptops as $laptop)
     <!-- Product Card -->
         <a href="{{ route('home.show', $laptop) }}" class="block">
@@ -257,7 +257,9 @@
       </div>
       @endforelse
     </div>
+    
   </section>
+
 
   <!--Accessories Details  -->
   <section class="bg-white mt-10">
@@ -265,7 +267,7 @@
       <h2 class="text-lg font-bold">Accessories</h2>
       <a href="{{ route('home.accessories') }}" class="text-sm hover:underline">See All &rarr;</a>
     </div>
-    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4 px-4 sm:px-6 py-6">
+    <div class="flex flex-wrap gap-4 px-4 sm:px-6 py-6">
       @forelse($accessories as $accessory)
       <!-- Product Card -->
         <a href="{{ route('home.show', $accessory) }}" class="block">
@@ -337,7 +339,7 @@
       <h2 class="text-lg font-bold">Phones</h2>
       <a href="{{ route('home.phones') }}" class="text-sm hover:underline">See All &rarr;</a>
     </div>
-    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4 px-4 sm:px-6 py-6">
+    <div class="flex flex-wrap gap-4 px-4 sm:px-6 py-6">
       @forelse($desktops as $desktop)
       <!-- Product Card -->
         <a href="{{ route('home.show', $desktop) }}" class="block">

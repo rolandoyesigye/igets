@@ -10,29 +10,29 @@ class Product extends Model
     use HasFactory;
 
     protected $fillable = [
-        'name',
-        'description',
-        'price',
-        'original_price',
-        'brand',
-        'category',
-        'image',
-        'sku',
-        'stock_quantity',
-        'is_active',
-        'is_featured',
-        'discount_percentage',
-        'specifications',
-        'condition',
-        'warranty',
+        "name",
+        "description",
+        "price",
+        "original_price",
+        "brand",
+        "category",
+        "image",
+        "sku",
+        "stock_quantity",
+        "is_active",
+        "is_featured",
+        "discount_percentage",
+        "specifications",
+        "condition",
+        "warranty",
     ];
 
     protected $casts = [
-        'price' => 'decimal:2',
-        'original_price' => 'decimal:2',
-        'is_active' => 'boolean',
-        'is_featured' => 'boolean',
-        'specifications' => 'array',
+        "price" => "decimal:2",
+        "original_price" => "decimal:2",
+        "is_active" => "boolean",
+        "is_featured" => "boolean",
+        "specifications" => "array",
     ];
 
     protected static function boot()
@@ -69,10 +69,10 @@ class Product extends Model
     public function getStockStatusAttribute()
     {
         if ($this->isOutOfStock()) {
-            return 'Out of Stock';
+            return "Out of Stock";
         }
-        
-        return 'In Stock';
+
+        return "In Stock";
     }
 
     /**
@@ -81,10 +81,10 @@ class Product extends Model
     public function getStockStatusColorAttribute()
     {
         if ($this->isOutOfStock()) {
-            return 'text-red-600';
+            return "text-red-600";
         }
-        
-        return 'text-green-600';
+
+        return "text-green-600";
     }
 
     /**
@@ -92,7 +92,7 @@ class Product extends Model
      */
     public function getFormattedPriceAttribute()
     {
-        return 'UGX ' . number_format($this->price, 0);
+        return "UGX " . number_format($this->price, 0);
     }
 
     /**
@@ -100,7 +100,9 @@ class Product extends Model
      */
     public function getFormattedOriginalPriceAttribute()
     {
-        return $this->original_price ? 'UGX ' . number_format($this->original_price, 0) : null;
+        return $this->original_price
+            ? "UGX " . number_format($this->original_price, 0)
+            : null;
     }
 
     /**
@@ -120,7 +122,11 @@ class Product extends Model
     public function getCalculatedDiscountPercentageAttribute()
     {
         if ($this->original_price && $this->price < $this->original_price) {
-            return round((($this->original_price - $this->price) / $this->original_price) * 100);
+            return round(
+                (($this->original_price - $this->price) /
+                    $this->original_price) *
+                    100,
+            );
         }
         return 0;
     }
@@ -130,7 +136,7 @@ class Product extends Model
      */
     public function scopeActive($query)
     {
-        return $query->where('is_active', true);
+        return $query->where("is_active", true);
     }
 
     /**
@@ -138,7 +144,7 @@ class Product extends Model
      */
     public function scopeFeatured($query)
     {
-        return $query->where('is_featured', true);
+        return $query->where("is_featured", true);
     }
 
     /**
@@ -146,7 +152,7 @@ class Product extends Model
      */
     public function scopeByCategory($query, $category)
     {
-        return $query->where('category', $category);
+        return $query->where("category", $category);
     }
 
     /**
@@ -154,7 +160,7 @@ class Product extends Model
      */
     public function scopeInStock($query)
     {
-        return $query->where('stock_quantity', '>', 0);
+        return $query->where("stock_quantity", ">", 0);
     }
 
     /**
@@ -162,6 +168,6 @@ class Product extends Model
      */
     public function scopeOutOfStock($query)
     {
-        return $query->where('stock_quantity', '<=', 0);
+        return $query->where("stock_quantity", "<=", 0);
     }
 }
