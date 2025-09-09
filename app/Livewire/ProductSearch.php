@@ -1,26 +1,111 @@
 <?php
 
-namespace App\Http\Livewire;
+namespace App\Livewire;
 
 use Livewire\Component;
-use App\Models\Product; // assuming your model is Product
+use App\Models\Product;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\Contracts\View\View;
 
 class ProductSearch extends Component
 {
-    public $query = '';
+    public $query = "";
     public $products = [];
+    public $showResults = false;
+    public $selectedIndex = -1;
 
-    public function updatedQuery()
+    protected $listeners = ["hideSearch" => "hideResults"];
+
+    /**
+     * Update search results when query changes
+     */
+    public function updatedQuery(): void
     {
-        $this->products = Product::where('name', 'like', '%' . $this->query . '%')
-            ->orWhere('description', 'like', '%' . $this->query . '%')
-            ->take(5) // limit results
-            ->get();
+        if (strlen($this->query) >= 2) {
+            $this->products = Product::query()
+                ->where("name", "like", "%" . $this->query . "%")
+                ->orWhere("description", "like", "%" . $this->query . "%")
+                ->orWhere("brand", "like", "%" . $this->query . "%")
+                ->orWhere("category", "like", "%" . $this->query . "%")
+                ->where("is_active", true)
+                ->take(8)
+                ->get();
+
+            $this->showResults = true;
+            $this->selectedIndex = -1;
+        } else {
+            $this->products = [];
+            $this->showResults = false;
+        }
     }
 
-    public function render()
+    /**
+     * Select a product from search results
+     *
+     * @param int $productId
+     * @return RedirectResponse
+     */
+    public function selectProduct(int $productId): RedirectResponse
     {
-        return view('livewire.product-search');
+        $product = Product::query()->find($productId);
+        if ($product) {
+            return redirect()->route("home.show", $product->id);
+        }
+        return redirect()->back();
+    }
+
+    /**
+     * Hide search results
+     */
+    public function hideResults(): void
+    {
+        $this->showResults = false;
+    }
+
+    /**
+     * Show all search results
+     */
+    public function showAllResults(): RedirectResponse
+    {
+        if (!empty($this->query)) {
+            return redirect()->route("search.results", ["q" => $this->query]);
+        }
+        return redirect()->back();
+    }
+
+    /**
+     * Handle keyboard navigation
+     *
+     * @param string $key
+     */
+    public function handleKeydown(string $key): void
+    {
+        if ($key === "Escape") {
+            $this->hideResults();
+        } elseif ($key === "ArrowDown") {
+            $this->selectedIndex = min(
+                $this->selectedIndex + 1,
+                count($this->products) - 1,
+            );
+        } elseif ($key === "ArrowUp") {
+            $this->selectedIndex = max($this->selectedIndex - 1, -1);
+        } elseif ($key === "Enter") {
+            if (
+                $this->selectedIndex >= 0 &&
+                isset($this->products[$this->selectedIndex])
+            ) {
+                $this->selectProduct($this->products[$this->selectedIndex]->id);
+            } elseif (!empty($this->query)) {
+                $this->showAllResults();
+            }
+        }
+    }
+
+    /**
+     * Render the component
+     */
+    public function render(): View
+    {
+        return view("livewire.product-search");
     }
 }
-

@@ -31,6 +31,18 @@ Route::get("/product/{product}", [HomeController::class, "show"])->name(
     "home.show",
 );
 
+// Search routes
+Route::get("/search", [HomeController::class, "search"])->name(
+    "search.results",
+);
+Route::get("/api/search", [HomeController::class, "apiSearch"])->name(
+    "api.search",
+);
+Route::get("/api/search/suggestions", [
+    HomeController::class,
+    "getSearchSuggestions",
+])->name("api.search.suggestions");
+
 // Orders for Home
 Route::get("/home/orders", [HomeController::class, "orders"])->name(
     "home.orders",

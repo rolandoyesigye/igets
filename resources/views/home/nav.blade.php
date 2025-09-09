@@ -29,7 +29,7 @@
         <a href="{{ route('home.accessories') }}" class="text-blue-700 hover:text-green-500">Accessories</a>
         <a href="{{ route('home.phones') }}" class="text-blue-700 hover:text-green-500">Phones</a>
 
-        <livewire:product-search />
+        
 
       </nav>
 
@@ -147,12 +147,9 @@
         <a href="{{ route('home.accessories') }}" class="block text-blue-700 hover:text-green-500">Accessories</a>
         <a href="{{ route('home.phones') }}" class="block text-blue-700 hover:text-green-500">Phones</a>
 
-        <div class="mt-3">
-          <livewire:product-search />
-        </div>
 
         <!-- Cart link for mobile -->
-        <a href="{{ Auth::check() ? route('cart.index') : route('login') }}" class="block text-blue-700 hover:text-green-500 flex items-center">
+        <a href="{{ Auth::check() ? route('cart.index') : route('login') }}" class="flex items-center text-blue-700 hover:text-green-500">
           <svg class="h-5 w-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4m0 0L7 13m0 0l-2.5 5M7 13l2.5 5m6-5v6a2 2 0 01-2 2H9a2 2 0 01-2-2v-6m8 0V9a2 2 0 00-2-2H9a2 2 0 00-2 2v4.01"></path>
           </svg>
@@ -177,14 +174,14 @@
           @if (Route::has('login'))
             @auth
               @if(auth()->user()->hasRole('admin') || auth()->user()->hasPermissionTo('access-dashboard'))
-                <a href="{{ url('/dashboard') }}" class="block px-4 py-2 border rounded mb-2 hover:bg-blue-50">Dashboard</a>
+                <a href="{{ url('/dashboard') }}" class="px-4 py-2 border rounded mb-2 hover:bg-blue-50 block">Dashboard</a>
               @else
-                <span class="block px-4 py-2 text-blue-500 text-sm">Welcome, {{ auth()->user()->name }}</span>
+                <span class="px-4 py-2 text-blue-500 text-sm block">Welcome, {{ auth()->user()->name }}</span>
               @endif
             @else
-              <a href="{{ route('login') }}" class="block bg-green-500 text-white px-4 py-2 rounded mb-2 hover:bg-green-600">Log in</a>
+              <a href="{{ route('login') }}" class="bg-green-500 text-white px-4 py-2 rounded mb-2 hover:bg-green-600 block">Log in</a>
               @if (Route::has('register'))
-                <a href="{{ route('register') }}" class="block bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600">Register</a>
+                <a href="{{ route('register') }}" class="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600 block">Register</a>
               @endif
             @endauth
           @endif
