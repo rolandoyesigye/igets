@@ -133,4 +133,4 @@ class CheckoutController extends Controller
 
         return view('checkout.success', compact('order'));
     }
-} 
+}
