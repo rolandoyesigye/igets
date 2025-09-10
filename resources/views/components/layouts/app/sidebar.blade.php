@@ -12,10 +12,10 @@
         <a href="{{ route('dashboard') }}"
            class="flex items-center gap-3 text-xl font-bold text-gray-900 hover:text-indigo-600 transition-colors duration-200"
            wire:navigate>
-            <div class="flex-shrink-0 w-10 h-10 bg-indigo-600 rounded-lg flex items-center justify-center">
+            <div class="flex-shrink-0 w-10 h-10 flex items-center justify-center">
                 <x-app-logo class="w-6 h-6 text-white" />
             </div>
-            <span class="hidden lg:block font-semibold tracking-tight">Igets</span>
+            <span class="hidden lg:block font-semibold tracking-tight">Technologies</span>
         </a>
     </div>
 
