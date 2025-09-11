@@ -45,7 +45,7 @@
   </div>
 </div>
 
-<div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4 px-4 sm:px-6 py-6">
+<div class="flex flex-wrap justify-center gap-4 px-4 sm:px-6 py-6">
       @forelse($products as $phone)
       <!-- Product Card -->
         <a href="{{ route('home.show', $phone) }}" class="block">

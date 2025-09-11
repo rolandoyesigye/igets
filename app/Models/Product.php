@@ -170,4 +170,23 @@ class Product extends Model
     {
         return $query->where("stock_quantity", "<=", 0);
     }
+
+    /**
+     * Scope for case-insensitive search
+     */
+    public function scopeSearch($query, $searchTerm)
+    {
+        // If search term is empty or null, return the query as-is
+        if (empty(trim($searchTerm))) {
+            return $query;
+        }
+
+        return $query->where(function ($q) use ($searchTerm) {
+            $searchLower = strtolower(trim($searchTerm));
+            $q->whereRaw("LOWER(name) LIKE ?", ["%{$searchLower}%"])
+                ->orWhereRaw("LOWER(description) LIKE ?", ["%{$searchLower}%"])
+                ->orWhereRaw("LOWER(brand) LIKE ?", ["%{$searchLower}%"])
+                ->orWhereRaw("LOWER(category) LIKE ?", ["%{$searchLower}%"]);
+        });
+    }
 }

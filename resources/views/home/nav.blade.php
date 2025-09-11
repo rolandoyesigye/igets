@@ -29,7 +29,7 @@
         <a href="{{ route('home.accessories') }}" class="text-blue-700 hover:text-green-500">Accessories</a>
         <a href="{{ route('home.phones') }}" class="text-blue-700 hover:text-green-500">Phones</a>
 
-        
+
 
       </nav>
 
@@ -176,7 +176,75 @@
               @if(auth()->user()->hasRole('admin') || auth()->user()->hasPermissionTo('access-dashboard'))
                 <a href="{{ url('/dashboard') }}" class="px-4 py-2 border rounded mb-2 hover:bg-blue-50 block">Dashboard</a>
               @else
-                <span class="px-4 py-2 text-blue-500 text-sm block">Welcome, {{ auth()->user()->name }}</span>
+                <span class="px-4 py-2 text-blue-500 text-sm block mb-2">Welcome, {{ auth()->user()->name }}</span>
+
+                <!-- Account Menu Items for Mobile -->
+                <div x-data="{ open: false }" class="md:hidden relative">
+                <!-- Button -->
+                <button @click="open = !open"
+                        class="flex items-center px-4 py-2 text-blue-500 rounded w-full justify-between hover:bg-blue-50">
+                    <span>Account</span>
+                    <svg :class="{ 'rotate-180': open }"
+                        class="h-5 w-5 transform transition-transform"
+                        fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M19 9l-7 7-7-7"/>
+                    </svg>
+                </button>
+
+                <!-- Dropdown Menu -->
+                <div x-show="open"
+                    x-transition
+                    @click.away="open = false"
+                    class="absolute left-0 mt-2 w-56 bg-white shadow-lg rounded z-50">
+
+                    <a href="{{ route('home.orders') }}"
+                    class="flex items-center px-4 py-2 text-blue-700 hover:bg-blue-100 rounded mb-1">
+                    <svg class="h-5 w-5 mr-2 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+                    </svg>
+                    My Orders
+                    </a>
+
+                    <a href="{{ route('account.settings') }}"
+                    class="flex items-center px-4 py-2 text-blue-700 hover:bg-blue-100 rounded mb-1">
+                    <svg class="h-5 w-5 mr-2 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/>
+                    </svg>
+                    Account Settings
+                    </a>
+
+                    <a href="{{ route('profile.settings') }}"
+                    class="flex items-center px-4 py-2 text-blue-700 hover:bg-blue-100 rounded mb-1">
+                    <svg class="h-5 w-5 mr-2 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/>
+                    </svg>
+                    Profile Settings
+                    </a>
+                </div>
+                </div>
+
+                @if(auth()->user()->hasRole('admin') || auth()->user()->hasPermissionTo('access-dashboard'))
+                  <a href="{{ url('/dashboard') }}" class="flex items-center px-4 py-2 text-blue-700 hover:bg-blue-100 rounded mb-1">
+                    <svg class="h-5 w-5 mr-2 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
+                    </svg>
+                    Dashboard
+                  </a>
+                @endif
+
+                <form method="POST" action="{{ route('logout') }}" class="mt-2">
+                  @csrf
+                  <button type="submit" class="w-full text-left flex items-center px-4 py-2 text-blue-700 hover:bg-blue-100 rounded">
+                    <svg class="h-5 w-5 mr-2 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path>
+                    </svg>
+                    Logout
+                  </button>
+                </form>
               @endif
             @else
               <a href="{{ route('login') }}" class="bg-green-500 text-white px-4 py-2 rounded mb-2 hover:bg-green-600 block">Log in</a>

@@ -5,8 +5,8 @@
   <div class="max-w-7xl mx-auto px-4 sm:px-6 py-4">
     <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
       <div>
-        <h1 class="text-2xl font-bold text-gray-900">Laptops</h1>
-        <p class="text-gray-600 text-sm">Find the perfect laptop for your needs</p>
+        <h1 class="text-2xl font-bold text-gray-900">Accessories</h1>
+        <p class="text-gray-600 text-sm">Find the perfect accessories for your Needs</p>
       </div>
 
       <!-- Category-specific search -->
@@ -27,17 +27,17 @@
 
         <!-- Quick filter tags -->
         <div class="flex flex-wrap gap-2 mt-3">
-          <a href="{{ route('search.results') }}?q=gaming laptop&category=laptops" class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-blue-100 text-blue-800 hover:bg-blue-200 transition-colors">
-            Gaming Laptops
+          <a href="{{ route('search.results') }}?q=speakers&category=accessories" class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-blue-100 text-blue-800 hover:bg-blue-200 transition-colors">
+            Speakers
           </a>
-          <a href="{{ route('search.results') }}?q=business laptop&category=laptops" class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-blue-100 text-blue-800 hover:bg-blue-200 transition-colors">
-            Business
+          <a href="{{ route('search.results') }}?q=mouse&category=accessories" class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-blue-100 text-blue-800 hover:bg-blue-200 transition-colors">
+            Mouse
           </a>
-          <a href="{{ route('search.results') }}?q=ultrabook&category=laptops" class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-blue-100 text-blue-800 hover:bg-blue-200 transition-colors">
-            Ultrabooks
+          <a href="{{ route('search.results') }}?q=earpods&category=accessories" class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-blue-100 text-blue-800 hover:bg-blue-200 transition-colors">
+            Earpods
           </a>
-          <a href="{{ route('search.results') }}?q=macbook&category=laptops" class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-blue-100 text-blue-800 hover:bg-blue-200 transition-colors">
-            MacBooks
+          <a href="{{ route('search.results') }}?q=keyboards&category=accessories" class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-blue-100 text-blue-800 hover:bg-blue-200 transition-colors">
+            Keyboards
           </a>
         </div>
       </div>
@@ -98,3 +98,4 @@
     </div>
 
 @include('home.footer')
+

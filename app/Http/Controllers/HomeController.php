@@ -136,12 +136,7 @@ class HomeController extends Controller
 
         // Search in name, description, brand
         if (!empty($query)) {
-            $products->where(function ($q) use ($query) {
-                $q->where("name", "like", "%" . $query . "%")
-                    ->orWhere("description", "like", "%" . $query . "%")
-                    ->orWhere("brand", "like", "%" . $query . "%")
-                    ->orWhere("category", "like", "%" . $query . "%");
-            });
+            $products->search($query);
         }
 
         // Filter by category
@@ -246,14 +241,7 @@ class HomeController extends Controller
             return response()->json([]);
         }
 
-        $products = Product::query()
-            ->where("is_active", true)
-            ->where(function ($q) use ($query) {
-                $q->where("name", "like", "%" . $query . "%")
-                    ->orWhere("description", "like", "%" . $query . "%")
-                    ->orWhere("brand", "like", "%" . $query . "%")
-                    ->orWhere("category", "like", "%" . $query . "%");
-            });
+        $products = Product::query()->where("is_active", true)->search($query);
 
         // Filter by category if provided (for context-aware search)
         if (!empty($category)) {
@@ -313,11 +301,7 @@ class HomeController extends Controller
         // Get suggestions from product names, categories, and brands
         $productSuggestions = Product::query()
             ->where("is_active", true)
-            ->where(function ($q) use ($query) {
-                $q->where("name", "like", "%" . $query . "%")
-                    ->orWhere("category", "like", "%" . $query . "%")
-                    ->orWhere("brand", "like", "%" . $query . "%");
-            })
+            ->search($query)
             ->distinct()
             ->limit(10)
             ->get(["name", "category", "brand"])

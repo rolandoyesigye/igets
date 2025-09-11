@@ -14,6 +14,7 @@ The search system includes three different search implementations:
 
 ### Core Search Features
 - **Real-time search** with debounced input
+- **Case-insensitive search** - works with both uppercase and lowercase input
 - **Keyboard navigation** (Arrow keys, Enter, Escape)
 - **Search suggestions** and autocomplete
 - **Recent search history** (stored in localStorage)
@@ -199,13 +200,17 @@ Search-specific styles are in `resources/css/search.css`. Key classes include:
 You can customize search behavior in `HomeController`:
 
 ```php
-// Modify search fields
+// Use the case-insensitive search scope
+$products->search($query);
+
+// Or customize search fields manually with case-insensitive matching
 $products->where(function ($q) use ($query) {
-    $q->where('name', 'like', '%' . $query . '%')
-      ->orWhere('description', 'like', '%' . $query . '%')
-      ->orWhere('brand', 'like', '%' . $query . '%')
-      ->orWhere('category', 'like', '%' . $query . '%')
-      ->orWhere('sku', 'like', '%' . $query . '%'); // Add SKU search
+    $search = strtolower($query);
+    $q->whereRaw('LOWER(name) LIKE ?', ["%{$search}%"])
+      ->orWhereRaw('LOWER(description) LIKE ?', ["%{$search}%"])
+      ->orWhereRaw('LOWER(brand) LIKE ?', ["%{$search}%"])
+      ->orWhereRaw('LOWER(category) LIKE ?', ["%{$search}%"])
+      ->orWhereRaw('LOWER(sku) LIKE ?', ["%{$search}%"]); // Add SKU search
 });
 
 // Modify result limits
@@ -321,7 +326,13 @@ For questions or issues regarding the search implementation:
 
 ## Changelog
 
-### Version 1.0.0 (Current)
+### Version 1.1.0 (Current)
+- **Case-insensitive search** implementation across all search components
+- Enhanced Product model with search scope
+- Updated admin search functionality for users and orders
+- Improved search reliability regardless of input case
+
+### Version 1.0.0
 - Initial implementation with three search variants
 - Search analytics system
 - Mobile-responsive design
