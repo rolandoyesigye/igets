@@ -264,19 +264,62 @@
         window.location.href = '{{ route('search.results') }}?q=' + encodeURIComponent(query);
       }
     }
+
+    // Hide scroll hints after user starts scrolling
+    document.addEventListener('DOMContentLoaded', function() {
+      const scrollContainers = document.querySelectorAll('.products-scroll');
+
+      scrollContainers.forEach(container => {
+        const scrollHint = container.querySelector('.scroll-hint');
+        let hasScrolled = false;
+
+        container.addEventListener('scroll', function() {
+          if (!hasScrolled && scrollHint) {
+            scrollHint.style.opacity = '0';
+            setTimeout(() => {
+              scrollHint.style.display = 'none';
+            }, 300);
+            hasScrolled = true;
+          }
+        });
+
+        // Also hide hint on touch start for better mobile experience
+        container.addEventListener('touchstart', function() {
+          if (!hasScrolled && scrollHint) {
+            scrollHint.style.opacity = '0';
+            setTimeout(() => {
+              scrollHint.style.display = 'none';
+            }, 300);
+            hasScrolled = true;
+          }
+        });
+      });
+    });
   </script>
 
   <!-- Laptop DEALS -->
 <section class="bg-white mt-10">
     <div class="flex justify-between items-center px-6 py-4 bg-blue-500 text-white">
       <h2 class="text-lg font-bold">Laptops</h2>
-      <a href="{{ route('home.laptops') }}" class="text-sm hover:underline">See All &rarr;</a>
+      <div class="flex items-center gap-4">
+        <span class="text-xs md:hidden opacity-75">← Swipe to see more →</span>
+        <a href="{{ route('home.laptops') }}" class="text-sm hover:underline">See All &rarr;</a>
+      </div>
   </div>
-    <div class="flex flex-wrap justify-center gap-4 px-4 sm:px-6 py-6">
-      @forelse($laptops as $laptop)
-    <!-- Product Card -->
-        <a href="{{ route('home.show', $laptop) }}" class="block">
-          <div class="relative bg-white shadow rounded p-2 hover:transition duration-500 ease-in-out hover:bg-gray-100 transform hover:-translate-y-1 hover:scale-110">
+    <div class="overflow-x-auto px-4 sm:px-6 py-6 products-scroll relative">
+      <!-- Mobile scroll hint -->
+      <div class="absolute right-2 top-1/2 transform -translate-y-1/2 md:hidden z-10 opacity-75 scroll-hint">
+        <div class="bg-blue-500 text-white rounded-full p-1 animate-pulse">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+          </svg>
+        </div>
+      </div>
+      <div class="flex gap-1 md:gap-2 md:flex-wrap md:justify-center min-w-max md:min-w-0">
+        @forelse($laptops as $laptop)
+      <!-- Product Card -->
+          <a href="{{ route('home.show', $laptop) }}" class="block flex-shrink-0 w-au md:w-auto">
+            <div class="relative bg-white shadow rounded p-2 hover:transition duration-500 ease-in-out hover:bg-gray-100 transform hover:-translate-y-1 hover:scale-110 product-card">
             @if($laptop->condition)
               <span class="absolute top-2 left-2 bg-blue-500 text-white text-xs px-2 py-0.5 rounded-full">
                 {{ ucfirst($laptop->condition) }}
@@ -315,7 +358,7 @@
                     </button>
 
                     <!-- WhatsApp Button (visible only on small screens) -->
-                    <a href="https://wa.me/2567014823881?text=I'm%20interested%20in%20{{ urlencode($laptop->name) }}"
+                    <a href="https://wa.me/256701482381?text=I'm%20interested%20in%20{{ urlencode($laptop->name) }}"
                       target="_blank"
                       class="block md:hidden w-full bg-green-500 text-white text-xs py-2 px-4 rounded hover:bg-green-600 transition text-center">
                         <i class="fab fa-whatsapp mr-1"></i> WhatsApp Us
@@ -327,15 +370,15 @@
                 <span class="text-xs text-red-600">Out of Stock</span>
               </div>
             @endif
+            </div>
+          </a>
+        @empty
+          <div class="col-span-full text-center py-8">
+            <p class="text-gray-500">No laptops available at the moment.</p>
           </div>
-        </a>
-      @empty
-        <div class="col-span-full text-center py-8">
-          <p class="text-gray-500">No laptops available at the moment.</p>
+        @endforelse
       </div>
-      @endforelse
     </div>
-</div>
 
   </section>
 
@@ -344,13 +387,25 @@
   <section class="bg-white mt-10">
     <div class="flex justify-between items-center px-6 py-4 bg-blue-500 text-white">
       <h2 class="text-lg font-bold">Accessories</h2>
-      <a href="{{ route('home.accessories') }}" class="text-sm hover:underline">See All &rarr;</a>
+      <div class="flex items-center gap-4">
+        <span class="text-xs md:hidden opacity-75">← Swipe to see more →</span>
+        <a href="{{ route('home.accessories') }}" class="text-sm hover:underline">See All &rarr;</a>
+      </div>
     </div>
-    <div class="flex flex-wrap justify-center gap-4 px-4 sm:px-6 py-6">
-      @forelse($accessories as $accessory)
-      <!-- Product Card -->
-        <a href="{{ route('home.show', $accessory) }}" class="block">
-          <div class="relative bg-white shadow rounded p-2 hover:transition duration-500 ease-in-out hover:bg-gray-100 transform hover:-translate-y-1 hover:scale-110">
+    <div class="overflow-x-auto px-4 sm:px-6 py-6 products-scroll relative">
+      <!-- Mobile scroll hint -->
+      <div class="absolute right-2 top-1/2 transform -translate-y-1/2 md:hidden z-10 opacity-75 scroll-hint">
+        <div class="bg-blue-500 text-white rounded-full p-1 animate-pulse">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+          </svg>
+        </div>
+      </div>
+      <div class="flex gap-1 md:gap-2 md:flex-wrap md:justify-center min-w-max md:min-w-0">
+        @forelse($accessories as $accessory)
+        <!-- Product Card -->
+          <a href="{{ route('home.show', $accessory) }}" class="block flex-shrink-0 w-48 md:w-auto">
+            <div class="relative bg-white shadow rounded p-2 hover:transition duration-500 ease-in-out hover:bg-gray-100 transform hover:-translate-y-1 hover:scale-110 product-card">
             @if($accessory->condition)
               <span class="absolute top-2 left-2 bg-blue-500 text-white text-xs px-2 py-0.5 rounded-full">
                 {{ ucfirst($accessory->condition) }}
@@ -402,13 +457,14 @@
                 <span class="text-xs text-red-600">Out of Stock</span>
               </div>
             @endif
+            </div>
+          </a>
+        @empty
+          <div class="col-span-full text-center py-8">
+            <p class="text-gray-500">No accessories available at the moment.</p>
           </div>
-        </a>
-      @empty
-        <div class="col-span-full text-center py-8">
-          <p class="text-gray-500">No accessories available at the moment.</p>
+        @endforelse
       </div>
-      @endforelse
     </div>
   </section>
 
@@ -416,13 +472,25 @@
   <section class="bg-white mt-10">
     <div class="flex justify-between items-center px-6 py-4 bg-blue-500 text-white">
       <h2 class="text-lg font-bold">Phones</h2>
-      <a href="{{ route('home.phones') }}" class="text-sm hover:underline">See All &rarr;</a>
+      <div class="flex items-center gap-4">
+        <span class="text-xs md:hidden opacity-75">← Swipe to see more →</span>
+        <a href="{{ route('home.phones') }}" class="text-sm hover:underline">See All &rarr;</a>
+      </div>
     </div>
-    <div class="flex flex-wrap justify-center gap-4 px-4 sm:px-6 py-6">
-      @forelse($phones as $phone)
-      <!-- Product Card -->
-        <a href="{{ route('home.show', $phone) }}" class="block">
-          <div class="relative bg-white shadow rounded p-2 hover:transition duration-500 ease-in-out hover:bg-gray-100 transform hover:-translate-y-1 hover:scale-110">
+    <div class="overflow-x-auto px-4 sm:px-6 py-6 products-scroll relative">
+      <!-- Mobile scroll hint -->
+      <div class="absolute right-2 top-1/2 transform -translate-y-1/2 md:hidden z-10 opacity-75 scroll-hint">
+        <div class="bg-blue-500 text-white rounded-full p-1 animate-pulse">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+          </svg>
+        </div>
+      </div>
+      <div class="flex gap-1 md:gap-2 md:flex-wrap md:justify-center min-w-max md:min-w-0">
+        @forelse($phones as $phone)
+        <!-- Product Card -->
+          <a href="{{ route('home.show', $phone) }}" class="block flex-shrink-0 w-48 md:w-auto">
+            <div class="relative bg-white shadow rounded p-2 hover:transition duration-500 ease-in-out hover:bg-gray-100 transform hover:-translate-y-1 hover:scale-110 product-card">
             @if($phone->condition)
               <span class="absolute top-2 left-2 bg-blue-500 text-white text-xs px-2 py-0.5 rounded-full">
                 {{ ucfirst($phone->condition) }}
@@ -474,15 +542,76 @@
                 <span class="text-xs text-red-600 font-medium">Out of Stock</span>
               </div>
             @endif
+            </div>
+          </a>
+        @empty
+          <div class="col-span-full text-center py-8">
+            <p class="text-gray-500">No phones available at the moment.</p>
           </div>
-        </a>
-      @empty
-        <div class="col-span-full text-center py-8">
-          <p class="text-gray-500">No phones available at the moment.</p>
+        @endforelse
       </div>
-      @endforelse
-  </div>
+    </div>
 </section>
 
   <!-- Footer -->
   @include('home.footer')
+
+  <!-- Auto-scroll JavaScript for Mobile -->
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      // Only enable auto-scroll on mobile devices
+      if (window.innerWidth <= 768) {
+        const scrollContainers = document.querySelectorAll('.products-scroll');
+
+        scrollContainers.forEach(container => {
+          let scrollDirection = 1;
+          let isPaused = false;
+          let autoScrollInterval;
+
+          function startAutoScroll() {
+            autoScrollInterval = setInterval(() => {
+              if (!isPaused) {
+                const maxScrollLeft = container.scrollWidth - container.clientWidth;
+
+                if (container.scrollLeft >= maxScrollLeft && scrollDirection === 1) {
+                  // Reached the end, scroll back to start
+                  scrollDirection = -1;
+                  container.scrollTo({ left: 0, behavior: 'smooth' });
+                } else if (container.scrollLeft <= 0 && scrollDirection === -1) {
+                  // Reached the start, scroll forward again
+                  scrollDirection = 1;
+                } else {
+                  // Continue scrolling in current direction
+                  container.scrollBy({ left: scrollDirection * 200, behavior: 'smooth' });
+                }
+              }
+            }, 3000); // Scroll every 3 seconds
+          }
+
+          function pauseAutoScroll() {
+            isPaused = true;
+            setTimeout(() => {
+              isPaused = false;
+            }, 5000); // Pause for 5 seconds after user interaction
+          }
+
+          // Start auto-scroll
+          startAutoScroll();
+
+          // Pause auto-scroll when user interacts
+          container.addEventListener('touchstart', pauseAutoScroll);
+          container.addEventListener('touchmove', pauseAutoScroll);
+          container.addEventListener('scroll', pauseAutoScroll);
+
+          // Clean up interval when page is hidden
+          document.addEventListener('visibilitychange', function() {
+            if (document.hidden) {
+              clearInterval(autoScrollInterval);
+            } else if (window.innerWidth <= 768) {
+              startAutoScroll();
+            }
+          });
+        });
+      }
+    });
+  </script>
