@@ -36,7 +36,7 @@
             </p>
             <p class="flex items-center">
               <i class="fas fa-phone mr-2 text-green-500"></i>
-              <a href="tel:+256123456789" class="hover:text-white transition-colors">+256 7014823881</a>
+              <a href="tel:+256123456789" class="hover:text-white transition-colors">+256 701482381</a>
             </p>
             <p class="flex items-center">
               <i class="fas fa-envelope mr-2 text-green-500"></i>

@@ -302,7 +302,6 @@
     <div class="flex justify-between items-center px-6 py-4 bg-blue-500 text-white">
       <h2 class="text-lg font-bold">Laptops</h2>
       <div class="flex items-center gap-4">
-        <span class="text-xs md:hidden opacity-75">← Swipe to see more →</span>
         <a href="{{ route('home.laptops') }}" class="text-sm hover:underline">See All &rarr;</a>
       </div>
   </div>
@@ -358,7 +357,7 @@
                     </button>
 
                     <!-- WhatsApp Button (visible only on small screens) -->
-                    <a href="https://wa.me/256701482381?text=I'm%20interested%20in%20{{ urlencode($laptop->name) }}"
+                    <a href="https://wa.me/256701482381?text=I'm%20interested%20in%20{{ urlencode($laptop->name) }}%20priced%20at%20UGX%20{{ number_format($laptop->price) }}%20is%20it%20still%20available?"
                       target="_blank"
                       class="block md:hidden w-full bg-green-500 text-white text-xs py-2 px-4 rounded hover:bg-green-600 transition text-center">
                         <i class="fab fa-whatsapp mr-1"></i> WhatsApp Us
@@ -388,7 +387,6 @@
     <div class="flex justify-between items-center px-6 py-4 bg-blue-500 text-white">
       <h2 class="text-lg font-bold">Accessories</h2>
       <div class="flex items-center gap-4">
-        <span class="text-xs md:hidden opacity-75">← Swipe to see more →</span>
         <a href="{{ route('home.accessories') }}" class="text-sm hover:underline">See All &rarr;</a>
       </div>
     </div>
@@ -473,7 +471,6 @@
     <div class="flex justify-between items-center px-6 py-4 bg-blue-500 text-white">
       <h2 class="text-lg font-bold">Phones</h2>
       <div class="flex items-center gap-4">
-        <span class="text-xs md:hidden opacity-75">← Swipe to see more →</span>
         <a href="{{ route('home.phones') }}" class="text-sm hover:underline">See All &rarr;</a>
       </div>
     </div>
