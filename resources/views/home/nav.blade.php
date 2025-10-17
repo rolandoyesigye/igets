@@ -14,7 +14,7 @@
 <link rel="apple-touch-icon" href="{{ asset('images/logo1.png') }}">
 
 </head>
-<body class="bg-blue-50" x-data="{ open: false }">
+<body class="bg-blue-50 overflow-x-hidden" x-data="{ open: false }">
 
   <!-- NAVBAR -->
   <header class="bg-white shadow">

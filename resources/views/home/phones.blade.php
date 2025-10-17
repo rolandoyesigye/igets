@@ -45,26 +45,28 @@
   </div>
 </div>
 
-<div class="flex flex-wrap justify-center gap-4 px-4 sm:px-6 py-6">
+<div class="grid grid-cols-2 [grid-template-columns:repeat(2,minmax(0,1fr))] sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 justify-items-stretch gap-4 px-4 sm:px-6 py-6 w-full max-w-none min-w-0">
       @forelse($products as $phone)
       <!-- Product Card -->
-        <a href="{{ route('home.show', $phone) }}" class="block">
-          <div class="relative bg-white shadow rounded p-2 hover:transition duration-500 ease-in-out hover:bg-gray-100 transform hover:-translate-y-1 hover:scale-110">
+        <div class="min-w-0 col-span-1">
+          <div class="relative bg-white shadow rounded p-2 transition duration-500 ease-in-out hover:bg-gray-100 md:transform md:hover:-translate-y-1 md:hover:scale-105 min-w-0 overflow-hidden">
             @if($phone->condition)
               <span class="absolute top-2 left-2 bg-blue-500 text-white text-xs px-2 py-0.5 rounded-full">
                 {{ ucfirst($phone->condition) }}
               </span>
             @endif
-            @if($phone->image)
-              <img src="{{ Storage::url($phone->image) }}" alt="{{ $phone->name }}" class="w-full h-32 object-cover rounded mb-2" />
-            @else
-              <div class="w-full h-32 bg-blue-100 rounded mb-2 flex items-center justify-center">
-                <svg class="w-8 h-8 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
-                </svg>
-              </div>
-            @endif
-            <h3 class="text-sm font-semibold truncate">{{ $phone->name }}</h3>
+            <a href="{{ route('home.show', $phone) }}" class="block min-w-0">
+              @if($phone->image)
+                <img src="{{ Storage::url($phone->image) }}" alt="{{ $phone->name }}" class="w-full h-32 object-cover rounded mb-2" />
+              @else
+                <div class="w-full h-32 bg-blue-100 rounded mb-2 flex items-center justify-center">
+                  <svg class="w-8 h-8 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                  </svg>
+                </div>
+              @endif
+              <h3 class="text-sm font-semibold truncate overflow-hidden">{{ $phone->name }}</h3>
+            </a>
             <p class="text-green-600 font-bold text-sm">UGX {{ number_format($phone->price) }}</p>
             @if($phone->original_price && $phone->original_price > $phone->price)
               <p class="line-through text-xs text-blue-500">UGX {{ number_format($phone->original_price) }}</p>
@@ -75,7 +77,7 @@
 
             <!-- Add to Cart Button -->
             @if($phone->isInStock())
-              <form action="{{ route('cart.add') }}" method="POST" class="mt-2" onclick="event.stopPropagation();">
+              <form action="{{ route('cart.add') }}" method="POST" class="mt-2">
                 @csrf
                 <input type="hidden" name="product_id" value="{{ $phone->id }}">
                 <input type="hidden" name="quantity" value="1">
@@ -100,7 +102,7 @@
               </div>
             @endif
           </div>
-        </a>
+        </div>
       @empty
         <div class="col-span-full text-center py-8">
           <p class="text-blue-500">No Phones available at the moment.</p>
