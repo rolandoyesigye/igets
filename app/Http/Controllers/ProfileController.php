@@ -29,12 +29,17 @@ class ProfileController extends Controller
         ]);
 
         $user = Auth::user();
-        $user->update([
+        if (! $user instanceof \App\Models\User) {
+            abort(403);
+        }
+
+        $user->forceFill([
             'password' => Hash::make($request->password),
-        ]);
+        ])->save();
 
         return redirect()->back()->with('success', 'Password updated successfully!');
     }
 }
+
 
 

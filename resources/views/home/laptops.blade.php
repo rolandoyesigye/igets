@@ -46,55 +46,76 @@
 </div>
 
 <div class="flex flex-wrap justify-center gap-4 px-4 sm:px-6 py-6">
-      @forelse($products as $laptop)
+  @forelse($products as $laptop)
     <!-- Product Card -->
-        <a href="{{ route('home.show', $laptop) }}" class="block">
-          <div class="relative bg-white shadow rounded p-2 hover:transition duration-500 ease-in-out hover:bg-gray-100 transform hover:-translate-y-1 hover:scale-110">
-            @if($laptop->condition)
-              <span class="absolute top-2 left-2 bg-blue-500 text-white text-xs px-2 py-0.5 rounded-full">
-                {{ ucfirst($laptop->condition) }}
-              </span>
-            @endif
-            @if($laptop->image)
-              <img src="{{ Storage::url($laptop->image) }}" alt="{{ $laptop->name }}" class="w-full h-32 object-cover rounded mb-2" />
-            @else
-              <div class="w-full h-32 bg-blue-100 rounded mb-2 flex items-center justify-center">
-                <svg class="w-8 h-8 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
-                </svg>
-              </div>
-            @endif
-            <h3 class="text-sm font-semibold truncate">{{ $laptop->name }}</h3>
-            <p class="text-green-600 font-bold text-sm">UGX {{ number_format($laptop->price) }}</p>
-            @if($laptop->original_price && $laptop->original_price > $laptop->price)
-              <p class="line-through text-xs text-blue-500">UGX {{ number_format($laptop->original_price) }}</p>
-            @endif
+    <a href="{{ route('home.show', $laptop) }}" class="block">
+      <div class="relative bg-white shadow rounded p-2 hover:transition duration-500 ease-in-out hover:bg-gray-100 transform hover:-translate-y-1 hover:scale-105">
+        @if($laptop->condition)
+          <span class="absolute top-2 left-2 bg-blue-500 text-white text-xs px-2 py-0.5 rounded-full">
+            {{ ucfirst($laptop->condition) }}
+          </span>
+        @endif
 
-            <!-- Stock Status -->
-            <p class="text-xs {{ $laptop->stock_status_color }} font-medium">{{ $laptop->stock_status }}</p>
-
-            <!-- Add to Cart Button -->
-            @if($laptop->isInStock())
-              <form action="{{ route('cart.add') }}" method="POST" class="mt-2" onclick="event.stopPropagation();">
-                @csrf
-                <input type="hidden" name="product_id" value="{{ $laptop->id }}">
-                <input type="hidden" name="quantity" value="1">
-                <button type="submit" class="w-full bg-green-500 text-white text-xs py-1 px-2 rounded hover:bg-green-600 transition-colors">
-                  Add to Cart
-                </button>
-              </form>
-            @else
-              <div class="mt-2 text-center">
-                <span class="text-xs text-red-600 font-medium">Out of Stock</span>
-              </div>
-            @endif
+        @if($laptop->image)
+          <img src="{{ Storage::url($laptop->image) }}" alt="{{ $laptop->name }}"
+               class="w-full h-32 object-cover rounded mb-2" />
+        @else
+          <div class="w-full h-32 bg-blue-100 rounded mb-2 flex items-center justify-center">
+            <svg class="w-8 h-8 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2
+                       l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12
+                       a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12
+                       a2 2 0 002 2z"/>
+            </svg>
           </div>
-        </a>
-      @empty
-        <div class="col-span-full text-center py-8">
-          <p class="text-blue-500">No laptops available at the moment.</p>
-      </div>
-      @endforelse
-    </div>
+        @endif
 
+        <h3 class="text-sm font-semibold truncate">{{ $laptop->name }}</h3>
+        <p class="text-green-600 font-bold text-sm">UGX {{ number_format($laptop->price) }}</p>
+
+        @if($laptop->original_price && $laptop->original_price > $laptop->price)
+          <p class="line-through text-xs text-blue-500">
+            UGX {{ number_format($laptop->original_price) }}
+          </p>
+        @endif
+
+        <!-- Stock Status -->
+        <p class="text-xs {{ $laptop->stock_status_color }} font-medium">{{ $laptop->stock_status }}</p>
+
+        <!-- Add to Cart -->
+        @if($laptop->isInStock())
+          <form action="{{ route('cart.add') }}" method="POST" class="mt-2" onclick="event.stopPropagation();">
+            @csrf
+            <input type="hidden" name="product_id" value="{{ $laptop->id }}">
+            <input type="hidden" name="quantity" value="1">
+
+            <div class="flex flex-col gap-2 items-center">
+              <!-- Add to Cart (visible on all screens) -->
+              <button type="submit"
+                      class="w-full bg-blue-500 text-white text-xs py-2 px-3 rounded hover:bg-green-600 transition">
+                Add to Cart
+              </button>
+
+              <!-- WhatsApp Button (visible only on small screens) -->
+              <a href="https://wa.me/256701482381?text=I'm%20interested%20in%20{{ urlencode($laptop->name) }}%20priced%20at%20UGX%20{{ number_format($laptop->price) }}%20is%20it%20still%20available?"
+                target="_blank"
+                class="block md:hidden w-full bg-green-500 text-white text-xs py-2 px-3 rounded hover:bg-green-600 transition text-center">
+                  <i class="fab fa-whatsapp mr-1"></i> WhatsApp Us
+              </a>
+            </div>
+          </form>
+        @else
+          <div class="mt-2 text-center">
+            <span class="text-xs text-red-600 font-medium">Out of Stock</span>
+          </div>
+        @endif
+      </div>
+    </a>
+  @empty
+    <div class="col-span-full text-center py-8">
+      <p class="text-blue-500">No laptops available at the moment.</p>
+    </div>
+  @endforelse
+</div>
 @include('home.footer')

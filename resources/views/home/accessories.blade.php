@@ -79,9 +79,20 @@
                 @csrf
                 <input type="hidden" name="product_id" value="{{ $laptop->id }}">
                 <input type="hidden" name="quantity" value="1">
-                <button type="submit" class="w-full bg-green-500 text-white text-xs py-1 px-2 rounded hover:bg-green-600 transition-colors">
-                  Add to Cart
-                </button>
+
+                <div class="flex flex-col gap-2 items-center">
+                  <!-- Add to Cart (visible on all screens) -->
+                  <button type="submit" class="w-full bg-blue-500 text-white text-xs py-2 px-3 rounded hover:bg-green-600 transition-colors">
+                    Add to Cart
+                  </button>
+
+                  <!-- WhatsApp Button (visible only on small screens) -->
+                  <a href="https://wa.me/256701482381?text=I'm%20interested%20in%20{{ urlencode($laptop->name) }}%20priced%20at%20UGX%20{{ number_format($laptop->price) }}%20is%20it%20still%20available?"
+                    target="_blank"
+                    class="block md:hidden w-full bg-green-500 text-white text-xs py-2 px-3 rounded hover:bg-green-600 transition text-center">
+                      <i class="fab fa-whatsapp mr-1"></i> WhatsApp Us
+                  </a>
+                </div>
               </form>
             @else
               <div class="mt-2 text-center">
@@ -98,4 +109,3 @@
     </div>
 
 @include('home.footer')
-
