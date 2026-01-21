@@ -86,13 +86,7 @@
             </div>
         </div>
 
-        <!-- Global Loading Indicator -->
-        <div id="loading-indicator" class="hidden fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center">
-            <div class="bg-white rounded-lg p-6 flex items-center space-x-3">
-                <div class="animate-spin rounded-full h-6 w-6 border-b-2 border-indigo-600"></div>
-                <span class="text-gray-900 font-medium">Loading...</span>
-            </div>
-        </div>
+
 
         <!-- Flash Messages Container -->
         <div id="flash-messages" class="fixed top-4 right-4 z-40 space-y-2">
@@ -166,35 +160,7 @@
                 });
             });
 
-            // Global loading state management
-            function showLoading() {
-                document.getElementById('loading-indicator').classList.remove('hidden');
-            }
 
-            function hideLoading() {
-                document.getElementById('loading-indicator').classList.add('hidden');
-            }
-
-            // Wire navigation loading states
-            document.addEventListener('livewire:navigating', () => {
-                showLoading();
-            });
-
-            document.addEventListener('livewire:navigated', () => {
-                hideLoading();
-            });
-
-            // Form submission loading states
-            document.addEventListener('submit', function(e) {
-                if (e.target.tagName === 'FORM') {
-                    showLoading();
-                }
-            });
-
-            // Hide loading on page load complete
-            window.addEventListener('load', function() {
-                hideLoading();
-            });
 
             // Responsive table handling
             function makeTablesResponsive() {
