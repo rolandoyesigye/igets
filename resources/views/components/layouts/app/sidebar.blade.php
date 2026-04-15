@@ -1,6 +1,19 @@
 <aside class="w-64 border-r bg-card h-screen flex flex-col shadow-xl">
+    <!-- Brand Header -->
+    <div class="px-6 py-6 border-b border-border">
+        <a href="{{ route('dashboard') }}" class="flex items-center gap-3">
+            <div class="w-12 h-12 bg-primary text-primary-foreground rounded-2xl flex items-center justify-center font-bold text-lg shadow-sm">
+                IG
+            </div>
+            <div>
+                <p class="text-sm font-semibold text-foreground">{{ config('app.name') }}</p>
+                <p class="text-xs text-muted-foreground">Admin Dashboard</p>
+            </div>
+        </a>
+    </div>
+
     <!-- User Profile Section (Top) -->
-    <div class="px-4 py-8">
+    <div class="px-4 py-8 lg:hidden">
         <div x-data="{ open: false }" class="relative">
             <button @click="open = !open" class="flex items-center gap-3 w-full p-2 rounded-xl hover:bg-accent transition-all duration-200 text-left">
                 <div class="flex-shrink-0 w-12 h-12 bg-primary text-primary-foreground rounded-xl flex items-center justify-center text-lg font-bold shadow-lg">
@@ -39,7 +52,7 @@
     </div>
 
     <!-- Search Section -->
-    <div class="px-6 mb-8">
+    <div class="px-6 mt-6 mb-8">
         <label class="relative block">
             <span class="absolute inset-y-0 left-0 flex items-center pl-3">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-muted-foreground"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>

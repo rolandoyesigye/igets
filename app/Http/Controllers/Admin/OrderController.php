@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Order;
+use App\Notifications\UserNotification;
 use Illuminate\Http\Request;
 
 class OrderController extends Controller
@@ -40,7 +41,32 @@ class OrderController extends Controller
                 "required|in:pending,processing,shipped,delivered,cancelled",
         ]);
 
-        $order->update(["status" => $request->status]);
+        $oldStatus = $order->status;
+        $newStatus = $request->status;
+
+        if ($oldStatus === $newStatus) {
+            return back()->with("info", "Order status is already {$newStatus}.");
+        }
+
+        $order->update(["status" => $newStatus]);
+
+        if ($order->user) {
+            $statusLabel = ucfirst($newStatus);
+            $message = match ($newStatus) {
+                'pending' => "Your order {$order->order_number} is now pending.",
+                'processing' => "Your order {$order->order_number} is now processing.",
+                'shipped' => "Your order {$order->order_number} has been shipped.",
+                'delivered' => "Your order {$order->order_number} has been delivered.",
+                'cancelled' => "Your order {$order->order_number} has been cancelled.",
+                default => "Your order {$order->order_number} status has been updated to {$statusLabel}.",
+            };
+
+            $order->user->notify(new UserNotification(
+                "Order {$statusLabel}",
+                $message,
+                route('checkout.success', $order),
+            ));
+        }
 
         return back()->with("success", "Order status updated successfully!");
     }

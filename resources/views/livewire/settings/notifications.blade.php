@@ -28,7 +28,11 @@ new class extends Component {
                             <div class="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4">
                                 <div class="space-y-1">
                                     <div class="flex items-center gap-2">
-                                        <span class="font-semibold">{{ $notification->data['title'] ?? __('Notification') }}</span>
+                                        @if(! empty($notification->data['url']))
+                                            <a href="{{ $notification->data['url'] }}" class="font-semibold text-primary hover:underline">{{ $notification->data['title'] ?? __('Notification') }}</a>
+                                        @else
+                                            <span class="font-semibold">{{ $notification->data['title'] ?? __('Notification') }}</span>
+                                        @endif
                                         @if(! $notification->read_at)
                                             <span class="inline-flex items-center rounded-full bg-primary px-2 py-0.5 text-[11px] font-semibold text-primary-foreground">{{ __('Unread') }}</span>
                                         @endif

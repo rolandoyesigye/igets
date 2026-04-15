@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Models\Cart;
 use App\Models\Order;
 use App\Models\OrderItem;
+use App\Models\User;
+use App\Notifications\UserNotification;
 use App\Traits\ToastrNotifications;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -112,6 +114,16 @@ class CheckoutController extends Controller
             Cart::where('user_id', Auth::id())->delete();
 
             DB::commit();
+
+            $orderOwnerName = Auth::user()->name;
+            $orderUrl = route('admin.orders.show', $order);
+            User::role('admin')->get()->each(function ($admin) use ($order, $orderOwnerName, $orderUrl) {
+                $admin->notify(new UserNotification(
+                    'New Order Placed',
+                    "Order {$order->order_number} has been placed by {$orderOwnerName}.",
+                    $orderUrl,
+                ));
+            });
 
             return redirect()->route('checkout.success', $order)
                            ->with('success', 'Order placed successfully!');

@@ -25,14 +25,6 @@
             >
                 {{ __('Appearance') }}
             </x-ui.button>
-            <x-ui.button
-                variant="{{ request()->routeIs('settings.notifications') ? 'secondary' : 'ghost' }}"
-                class="justify-start font-medium w-full"
-                :href="route('settings.notifications')"
-                wire:navigate
-            >
-                {{ __('Notifications') }}
-            </x-ui.button>
         </nav>
     </div>
 
