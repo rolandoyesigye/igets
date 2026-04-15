@@ -69,46 +69,68 @@ new class extends Component {
     }
 }; ?>
 
-<section class="w-full">
-    @include('partials.settings-heading')
-
+<section class="max-w-2xl">
     <x-settings.layout :heading="__('Profile')" :subheading="__('Update your name and email address')">
-        <form wire:submit="updateProfileInformation" class="my-6 w-full space-y-6">
-            <flux:input wire:model="name" :label="__('Name')" type="text" required autofocus autocomplete="name" />
+        <form wire:submit="updateProfileInformation" class="my-6 space-y-6">
+            <div class="space-y-4">
+                <div class="grid gap-2">
+                    <x-ui.label for="name">{{ __('Name') }}</x-ui.label>
+                    <x-ui.input 
+                        wire:model="name" 
+                        id="name" 
+                        type="text" 
+                        required 
+                        autofocus 
+                        autocomplete="name" 
+                        placeholder="Your full name"
+                    />
+                    @error('name') <p class="text-xs text-destructive">{{ $message }}</p> @enderror
+                </div>
 
-            <div>
-                <flux:input wire:model="email" :label="__('Email')" type="email" required autocomplete="email" />
+                <div class="grid gap-2">
+                    <x-ui.label for="email">{{ __('Email') }}</x-ui.label>
+                    <x-ui.input 
+                        wire:model="email" 
+                        id="email" 
+                        type="email" 
+                        required 
+                        autocomplete="email" 
+                        placeholder="email@example.com"
+                    />
+                    @error('email') <p class="text-xs text-destructive">{{ $message }}</p> @enderror
 
-                @if (auth()->user() instanceof \Illuminate\Contracts\Auth\MustVerifyEmail &&! auth()->user()->hasVerifiedEmail())
-                    <div>
-                        <flux:text class="mt-4">
-                            {{ __('Your email address is unverified.') }}
+                    @if (auth()->user() instanceof \Illuminate\Contracts\Auth\MustVerifyEmail && ! auth()->user()->hasVerifiedEmail())
+                        <div class="mt-2 text-sm">
+                            <p class="text-muted-foreground">
+                                {{ __('Your email address is unverified.') }}
+                                <button type="button" class="text-primary hover:underline font-medium ml-1" wire:click.prevent="resendVerificationNotification">
+                                    {{ __('Resend verification email') }}
+                                </button>
+                            </p>
 
-                            <flux:link class="text-sm cursor-pointer" wire:click.prevent="resendVerificationNotification">
-                                {{ __('Click here to re-send the verification email.') }}
-                            </flux:link>
-                        </flux:text>
-
-                        @if (session('status') === 'verification-link-sent')
-                            <flux:text class="mt-2 font-medium !dark:text-green-400 !text-green-600">
-                                {{ __('A new verification link has been sent to your email address.') }}
-                            </flux:text>
-                        @endif
-                    </div>
-                @endif
+                            @if (session('status') === 'verification-link-sent')
+                                <p class="mt-2 text-xs font-medium text-green-600 dark:text-green-400">
+                                    {{ __('A new verification link has been sent to your email address.') }}
+                                </p>
+                            @endif
+                        </div>
+                    @endif
+                </div>
             </div>
 
             <div class="flex items-center gap-4">
-                <div class="flex items-center justify-end">
-                    <flux:button variant="primary" type="submit" class="w-full">{{ __('Save') }}</flux:button>
-                </div>
+                <x-ui.button variant="default" type="submit">
+                    {{ __('Save Changes') }}
+                </x-ui.button>
 
-                <x-action-message class="me-3" on="profile-updated">
-                    {{ __('Saved.') }}
+                <x-action-message class="text-sm text-muted-foreground italic" on="profile-updated">
+                    {{ __('Settings saved successfully.') }}
                 </x-action-message>
             </div>
         </form>
 
-        <livewire:settings.delete-user-form />
+        <div class="border-t pt-8">
+            <livewire:settings.delete-user-form />
+        </div>
     </x-settings.layout>
 </section>

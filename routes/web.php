@@ -7,6 +7,7 @@ use App\Http\Controllers\ProductController;
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\CheckoutController;
 use App\Http\Controllers\AccountController;
+use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Auth\SocialiteController;
@@ -111,6 +112,20 @@ Route::middleware(["auth"])->group(function () {
         ProfileController::class,
         "updatePassword",
     ])->name("profile.password.update");
+
+    // Notification actions for authenticated users
+    Route::put("/notifications/read-all", [
+        NotificationController::class,
+        "markAllAsRead",
+    ])->name("notifications.readAll");
+    Route::put("/notifications/{notification}/read", [
+        NotificationController::class,
+        "markAsRead",
+    ])->name("notifications.read");
+    Route::post("/notifications/test", [
+        NotificationController::class,
+        "sendTest",
+    ])->name("notifications.test");
 });
 
 // Product routes using ProductController
@@ -131,6 +146,9 @@ Route::middleware(["auth", "dashboard.access"])->group(function () {
     );
     Volt::route("settings/appearance", "settings.appearance")->name(
         "settings.appearance",
+    );
+    Volt::route("settings/notifications", "settings.notifications")->name(
+        "settings.notifications",
     );
 
     // Admin Management Routes - restricted to admin role only
@@ -160,6 +178,14 @@ Route::middleware(["auth", "dashboard.access"])->group(function () {
             Route::get("/users", [UserController::class, "index"])->name(
                 "users.index",
             );
+            Route::get("/users/create", [
+                UserController::class,
+                "create",
+            ])->name("users.create");
+            Route::post("/users", [
+                UserController::class,
+                "store",
+            ])->name("users.store");
             Route::get("/users/{user}/edit", [
                 UserController::class,
                 "edit",
