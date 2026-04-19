@@ -20,21 +20,21 @@ class HomeController extends Controller
             ->where("category", "laptops")
             ->where("is_active", true)
             ->latest()
-            ->take(6)
+            ->take(5)
             ->get();
 
         $accessories = Product::query()
             ->where("category", "accessories")
             ->where("is_active", true)
             ->latest()
-            ->take(6)
+            ->take(5)
             ->get();
 
         $phones = Product::query()
             ->where("category", "phones")
             ->where("is_active", true)
             ->latest()
-            ->take(6)
+            ->take(5)
             ->get();
 
         // You can pass data to the view here if needed
