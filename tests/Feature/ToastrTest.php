@@ -70,8 +70,10 @@ class ToastrTest extends TestCase
 
         if ($hasFlasher && !$hasSuccess) {
             $envelopes = $response->getSession()->get('flasher::envelopes');
-            $this->assertEquals('success', $envelopes[0]->getNotification()->getType());
-            $this->assertStringContainsString('Product added to cart successfully!', $envelopes[0]->getNotification()->getMessage());
+            $envelope = is_string($envelopes[0]) ? unserialize($envelopes[0]) : $envelopes[0];
+            
+            $this->assertEquals('success', $envelope->getNotification()->getType());
+            $this->assertStringContainsString('Product added to cart successfully!', $envelope->getNotification()->getMessage());
         }
     }
 }
