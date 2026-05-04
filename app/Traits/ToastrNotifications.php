@@ -44,6 +44,7 @@ trait ToastrNotifications
         if ($route) {
             return redirect()->route($route)->with('success', $message);
         }
+
         return redirect()->back()->with('success', $message);
     }
 
@@ -55,6 +56,7 @@ trait ToastrNotifications
         if ($route) {
             return redirect()->route($route)->with('error', $message);
         }
+
         return redirect()->back()->with('error', $message);
     }
-} 
+}

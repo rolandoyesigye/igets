@@ -27,7 +27,7 @@ class ShowProductStock extends Command
     public function handle()
     {
         $query = Product::orderBy('category')->orderBy('name');
-        
+
         if ($category = $this->option('category')) {
             $query->where('category', $category);
         }
@@ -36,6 +36,7 @@ class ShowProductStock extends Command
 
         if ($products->isEmpty()) {
             $this->info('No products found.');
+
             return 0;
         }
 
@@ -48,14 +49,14 @@ class ShowProductStock extends Command
         foreach ($products as $product) {
             $statusColor = $product->isOutOfStock() ? 'red' : 'green';
             $statusText = $product->stock_status;
-            
+
             $rows[] = [
                 $product->id,
                 $product->name,
                 ucfirst($product->category),
                 $product->stock_quantity,
                 $this->colorize($statusText, $statusColor),
-                $product->is_active ? 'Yes' : 'No'
+                $product->is_active ? 'Yes' : 'No',
             ];
         }
 
@@ -64,10 +65,10 @@ class ShowProductStock extends Command
         // Summary
         $this->line('');
         $this->info('Summary:');
-        $this->line('Total Products: ' . $products->count());
-        $this->line('Out of Stock: ' . $products->where('stock_quantity', '<=', 0)->count());
-        $this->line('In Stock: ' . $products->where('stock_quantity', '>', 0)->count());
-        $this->line('Active Products: ' . $products->where('is_active', true)->count());
+        $this->line('Total Products: '.$products->count());
+        $this->line('Out of Stock: '.$products->where('stock_quantity', '<=', 0)->count());
+        $this->line('In Stock: '.$products->where('stock_quantity', '>', 0)->count());
+        $this->line('Active Products: '.$products->where('is_active', true)->count());
 
         return 0;
     }
@@ -78,9 +79,9 @@ class ShowProductStock extends Command
             'red' => "\033[31m",
             'green' => "\033[32m",
             'yellow' => "\033[33m",
-            'reset' => "\033[0m"
+            'reset' => "\033[0m",
         ];
 
-        return $colors[$color] . $text . $colors['reset'];
+        return $colors[$color].$text.$colors['reset'];
     }
 }

@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Models\Cart;
 use App\Models\Order;
 use App\Models\OrderItem;
+use App\Models\User;
+use App\Notifications\UserNotification;
 use App\Traits\ToastrNotifications;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -13,18 +15,19 @@ use Illuminate\Support\Facades\DB;
 class CheckoutController extends Controller
 {
     use ToastrNotifications;
+
     /**
      * Display the checkout page
      */
     public function index()
     {
-        if (!Auth::check()) {
+        if (! Auth::check()) {
             return $this->toastErrorRedirect('Please log in to checkout.', 'login');
         }
 
         $cartItems = Cart::where('user_id', Auth::id())
-                        ->with('product')
-                        ->get();
+            ->with('product')
+            ->get();
 
         if ($cartItems->isEmpty()) {
             return $this->toastErrorRedirect('Your cart is empty.', 'cart.index');
@@ -46,7 +49,7 @@ class CheckoutController extends Controller
      */
     public function store(Request $request)
     {
-        if (!Auth::check()) {
+        if (! Auth::check()) {
             return $this->toastErrorRedirect('Please log in to checkout.', 'login');
         }
 
@@ -62,8 +65,8 @@ class CheckoutController extends Controller
         ]);
 
         $cartItems = Cart::where('user_id', Auth::id())
-                        ->with('product')
-                        ->get();
+            ->with('product')
+            ->get();
 
         if ($cartItems->isEmpty()) {
             return $this->toastErrorRedirect('Your cart is empty.', 'cart.index');
@@ -81,7 +84,7 @@ class CheckoutController extends Controller
             // Create order
             $order = Order::create([
                 'user_id' => Auth::id(),
-                'order_number' => 'ORD-' . strtoupper(uniqid()),
+                'order_number' => 'ORD-'.strtoupper(uniqid()),
                 'first_name' => $request->first_name,
                 'last_name' => $request->last_name,
                 'email' => $request->email,
@@ -113,11 +116,22 @@ class CheckoutController extends Controller
 
             DB::commit();
 
+            $orderOwnerName = Auth::user()->name;
+            $orderUrl = route('admin.orders.show', $order);
+            User::role('admin')->get()->each(function ($admin) use ($order, $orderOwnerName, $orderUrl) {
+                $admin->notify(new UserNotification(
+                    'New Order Placed',
+                    "Order {$order->order_number} has been placed by {$orderOwnerName}.",
+                    $orderUrl,
+                ));
+            });
+
             return redirect()->route('checkout.success', $order)
-                           ->with('success', 'Order placed successfully!');
+                ->with('success', 'Order placed successfully!');
 
         } catch (\Exception $e) {
             DB::rollBack();
+
             return $this->toastError('An error occurred while processing your order. Please try again.');
         }
     }
@@ -127,7 +141,7 @@ class CheckoutController extends Controller
      */
     public function success(Order $order)
     {
-        if (!Auth::check() || $order->user_id !== Auth::id()) {
+        if (! Auth::check() || $order->user_id !== Auth::id()) {
             return redirect()->route('home');
         }
 

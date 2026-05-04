@@ -15,7 +15,7 @@ class StockManagementTest extends TestCase
     {
         $product = Product::factory()->create([
             'stock_quantity' => 0,
-            'is_active' => true
+            'is_active' => true,
         ]);
 
         // The product should automatically be set to inactive due to the model boot method
@@ -27,7 +27,7 @@ class StockManagementTest extends TestCase
     {
         $product = Product::factory()->create([
             'stock_quantity' => 5,
-            'is_active' => true
+            'is_active' => true,
         ]);
 
         $this->assertTrue($product->fresh()->is_active);
@@ -38,15 +38,15 @@ class StockManagementTest extends TestCase
     public function test_stock_status_attributes()
     {
         $outOfStockProduct = Product::factory()->create([
-            'stock_quantity' => 0
+            'stock_quantity' => 0,
         ]);
 
         $lowStockProduct = Product::factory()->create([
-            'stock_quantity' => 5
+            'stock_quantity' => 5,
         ]);
 
         $inStockProduct = Product::factory()->create([
-            'stock_quantity' => 50
+            'stock_quantity' => 50,
         ]);
 
         $this->assertEquals('Out of Stock', $outOfStockProduct->stock_status);
@@ -63,34 +63,34 @@ class StockManagementTest extends TestCase
     {
         $product = Product::factory()->create([
             'stock_quantity' => 0,
-            'is_active' => false
+            'is_active' => false,
         ]);
 
         $user = User::factory()->create();
 
         $response = $this->actingAs($user)
-            ->post(route('cart.add'), [
+            ->postJson(route('cart.add'), [
                 'product_id' => $product->id,
-                'quantity' => 1
+                'quantity' => 1,
             ]);
 
         $response->assertStatus(422);
-        $this->assertStringContainsString('out of stock', $response->getContent());
+        $this->assertStringContainsString('unavailable', $response->getContent());
     }
 
     public function test_cannot_add_more_than_available_stock()
     {
         $product = Product::factory()->create([
             'stock_quantity' => 5,
-            'is_active' => true
+            'is_active' => true,
         ]);
 
         $user = User::factory()->create();
 
         $response = $this->actingAs($user)
-            ->post(route('cart.add'), [
+            ->postJson(route('cart.add'), [
                 'product_id' => $product->id,
-                'quantity' => 10
+                'quantity' => 10,
             ]);
 
         $response->assertStatus(422);

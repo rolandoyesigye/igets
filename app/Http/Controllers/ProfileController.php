@@ -3,8 +3,8 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rules\Password;
 
 class ProfileController extends Controller
@@ -15,6 +15,7 @@ class ProfileController extends Controller
     public function index()
     {
         $user = Auth::user();
+
         return view('home.profile_setting', compact('user'));
     }
 
@@ -40,6 +41,3 @@ class ProfileController extends Controller
         return redirect()->back()->with('success', 'Password updated successfully!');
     }
 }
-
-
-

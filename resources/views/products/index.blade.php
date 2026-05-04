@@ -1,402 +1,266 @@
 <x-layouts.app :title="__('Products')">
-    <div class="min-h-full bg-gray-50 dark:bg-zinc-900">
+    <div class="space-y-8">
         <!-- Page Header -->
-        <div class="bg-white dark:bg-zinc-800 shadow-sm border-b border-gray-200 dark:border-zinc-700">
-            <div class="px-4 sm:px-6 lg:px-8 py-6">
-                <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between">
-                    <div>
-                        <h1 class="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-white">
-                            Products Management
-                        </h1>
-                        <p class="mt-1 text-sm text-gray-600 dark:text-gray-400">
-                            Manage your product inventory and catalog
-                        </p>
-                    </div>
-                    <div class="mt-4 sm:mt-0 flex flex-col sm:flex-row gap-3">
-                        <div class="flex items-center gap-2 text-sm text-gray-500 dark:text-gray-400">
-                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"></path>
-                            </svg>
-                            Total Products: {{ $products->count() }}
-                        </div>
-                        <a href="{{ route('products.create') }}"
-                           class="inline-flex items-center gap-2 px-4 py-2 text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 rounded-lg shadow-sm transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-                           wire:navigate>
-                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
-                            </svg>
-                            Add Product
-                        </a>
-                    </div>
+        <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+            <div class="flex flex-col gap-1">
+                <h1 class="text-3xl font-bold tracking-tight text-foreground">
+                    Products Management
+                </h1>
+                <p class="text-sm font-medium text-muted-foreground">
+                    Manage your product inventory and catalog
+                </p>
+            </div>
+            <div class="flex items-center gap-3">
+                <div class="hidden sm:flex flex-col items-end px-4 border-r">
+                    <span class="text-xs font-semibold text-muted-foreground uppercase tracking-wider">Total Products</span>
+                    <span class="text-sm font-bold">{{ $products->count() }}</span>
                 </div>
+                <x-ui.button variant="default" :href="route('products.create')" wire:navigate>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-2"><path d="M5 12h14"/><path d="M12 5v14"/></svg>
+                    Add Product
+                </x-ui.button>
             </div>
         </div>
 
-        <!-- Main Content -->
-        <div class="px-4 sm:px-6 lg:px-8 py-6">
-            <!-- Quick Stats -->
-            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
-                <div class="bg-white dark:bg-zinc-800 rounded-xl p-6 shadow-sm border border-gray-200 dark:border-zinc-700">
-                    <div class="flex items-center">
-                        <div class="flex-shrink-0 w-10 h-10 bg-green-100 dark:bg-green-900/50 rounded-lg flex items-center justify-center">
-                            <svg class="w-5 h-5 text-green-600 dark:text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
-                            </svg>
-                        </div>
-                        <div class="ml-4">
-                            <p class="text-sm font-medium text-gray-600 dark:text-gray-400">Active Products</p>
-                            <p class="text-2xl font-bold text-gray-900 dark:text-white">
-                                {{ $products->where('is_active', true)->count() }}
-                            </p>
-                        </div>
+        <!-- Statistics Grid -->
+        <div class="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+            <x-ui.card class="p-6 transition-all hover:border-primary/50 group">
+                <div class="flex items-center justify-between space-y-0 pb-2">
+                    <h3 class="text-sm font-medium text-muted-foreground">Active Products</h3>
+                    <div class="bg-green-100 dark:bg-green-900/40 p-2 rounded-lg">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-green-600 dark:text-green-400 font-bold"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
                     </div>
                 </div>
+                <div class="text-2xl font-bold">{{ $products->where('is_active', true)->count() }}</div>
+                <p class="text-xs text-muted-foreground mt-1">Currently live on store</p>
+            </x-ui.card>
 
-                <div class="bg-white dark:bg-zinc-800 rounded-xl p-6 shadow-sm border border-gray-200 dark:border-zinc-700">
-                    <div class="flex items-center">
-                        <div class="flex-shrink-0 w-10 h-10 bg-yellow-100 dark:bg-yellow-900/50 rounded-lg flex items-center justify-center">
-                            <svg class="w-5 h-5 text-yellow-600 dark:text-yellow-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.268 16.5c-.77.833.192 2.5 1.732 2.5z"></path>
-                            </svg>
-                        </div>
-                        <div class="ml-4">
-                            <p class="text-sm font-medium text-gray-600 dark:text-gray-400">Out of Stock</p>
-                            <p class="text-2xl font-bold text-gray-900 dark:text-white">
-                                {{ $products->filter(function($product) { return $product->isOutOfStock(); })->count() }}
-                            </p>
-                        </div>
+            <x-ui.card class="p-6 transition-all hover:border-primary/50 group">
+                <div class="flex items-center justify-between space-y-0 pb-2">
+                    <h3 class="text-sm font-medium text-muted-foreground">Out of Stock</h3>
+                    <div class="bg-destructive/10 p-2 rounded-lg">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-destructive"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><path d="M12 9v4"/><path d="M12 17h.01"/></svg>
                     </div>
                 </div>
+                <div class="text-2xl font-bold">{{ $products->filter(fn($p) => $p->isOutOfStock())->count() }}</div>
+                <p class="text-xs text-destructive font-medium mt-1">Require immediate restock</p>
+            </x-ui.card>
 
-                <div class="bg-white dark:bg-zinc-800 rounded-xl p-6 shadow-sm border border-gray-200 dark:border-zinc-700">
-                    <div class="flex items-center">
-                        <div class="flex-shrink-0 w-10 h-10 bg-blue-100 dark:bg-blue-900/50 rounded-lg flex items-center justify-center">
-                            <svg class="w-5 h-5 text-blue-600 dark:text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z"></path>
-                            </svg>
-                        </div>
-                        <div class="ml-4">
-                            <p class="text-sm font-medium text-gray-600 dark:text-gray-400">Categories</p>
-                            <p class="text-2xl font-bold text-gray-900 dark:text-white">
-                                {{ $products->pluck('category')->unique()->count() }}
-                            </p>
-                        </div>
+            <x-ui.card class="p-6 transition-all hover:border-primary/50 group">
+                <div class="flex items-center justify-between space-y-0 pb-2">
+                    <h3 class="text-sm font-medium text-muted-foreground">Categories</h3>
+                    <div class="bg-primary/10 p-2 rounded-lg">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-primary"><path d="m16.5 9.4 4.5 2.8 4.5-2.8V5.8L21 3l-4.5 2.8v3.6Z"/><path d="M21 15.9v4.9"/><path d="M3 5.8 7.5 3 12 5.8v3.6L7.5 12.2 3 9.4V5.8Z"/><path d="M3 14.6 7.5 11.8 12 14.6v3.6L7.5 21 3 18.2v-3.6Z"/><path d="m16.5 18.2 4.5 2.8 4.5-2.8v-3.6l-4.5-2.8-4.5 2.8v3.6Z"/><path d="M12 11.4 7.5 8.6 3 11.4v3.6l4.5 2.8 4.5-2.8v-3.6Z"/></svg>
                     </div>
                 </div>
+                <div class="text-2xl font-bold">{{ $products->pluck('category')->unique()->count() }}</div>
+                <p class="text-xs text-muted-foreground mt-1">Product groupings</p>
+            </x-ui.card>
 
-                <div class="bg-white dark:bg-zinc-800 rounded-xl p-6 shadow-sm border border-gray-200 dark:border-zinc-700">
-                    <div class="flex items-center">
-                        <div class="flex-shrink-0 w-10 h-10 bg-purple-100 dark:bg-purple-900/50 rounded-lg flex items-center justify-center">
-                            <svg class="w-5 h-5 text-purple-600 dark:text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1"></path>
-                            </svg>
-                        </div>
-                        <div class="ml-4">
-                            <p class="text-sm font-medium text-gray-600 dark:text-gray-400">Total Value</p>
-                            <p class="text-2xl font-bold text-gray-900 dark:text-white">
-                                UGX {{ number_format($products->sum('price')) }}
-                            </p>
-                        </div>
+            <x-ui.card class="p-6 transition-all hover:border-primary/50 group">
+                <div class="flex items-center justify-between space-y-0 pb-2">
+                    <h3 class="text-sm font-medium text-muted-foreground">Inventory Value</h3>
+                    <div class="bg-blue-100 dark:bg-blue-900/40 p-2 rounded-lg">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-blue-600 dark:text-blue-400 font-bold"><circle cx="12" cy="12" r="10"/><path d="M16 8h-6a2 2 0 1 0 0 4h4a2 2 0 1 1 0 4H8"/><path d="M12 18V6"/></svg>
                     </div>
+                </div>
+                <div class="text-xl font-bold">UGX {{ number_format($products->sum('price')) }}</div>
+                <p class="text-xs text-green-600 font-medium mt-1">+4.5% volume growth</p>
+            </x-ui.card>
+        </div>
+
+        <!-- Products Table Section -->
+        <x-ui.card class="overflow-hidden shadow-md">
+            <div class="p-6 flex flex-col sm:flex-row items-start sm:items-center justify-between border-b gap-4">
+                <div>
+                    <h3 class="text-lg font-semibold">All Products</h3>
+                    <p class="text-sm text-muted-foreground">Manage and track your entire inventory catalog.</p>
+                </div>
+                <div class="flex items-center gap-2 w-full sm:w-auto">
+                    <x-ui.input placeholder="Filter products..." class="max-w-[300px]" id="tableSearch" />
+                    <x-ui.button variant="outline" size="icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" x2="12" y1="15" y2="3"/></svg>
+                    </x-ui.button>
                 </div>
             </div>
 
-            <!-- Products Table -->
-            <div class="bg-white dark:bg-zinc-800 rounded-xl shadow-sm border border-gray-200 dark:border-zinc-700 overflow-hidden">
-                <div class="px-6 py-5 border-b border-gray-200 dark:border-zinc-700">
-                    <h3 class="text-lg font-semibold text-gray-900 dark:text-white">All Products</h3>
-                    <p class="text-sm text-gray-600 dark:text-gray-400 mt-1">Manage your entire product catalog</p>
-                </div>
-
-                <!-- Mobile Cards View (visible on small screens) -->
-                <div class="block lg:hidden">
-                    <div class="divide-y divide-gray-200 dark:divide-zinc-700">
+            <div class="relative w-full overflow-auto">
+                <table class="w-full caption-bottom text-sm">
+                    <thead class="[&_tr]:border-b bg-muted/30">
+                        <tr class="border-b transition-colors hover:bg-muted/50 data-[state=selected]:bg-muted">
+                            <th class="h-12 px-4 text-left align-middle font-medium text-muted-foreground w-[80px]">Image</th>
+                            <th class="h-12 px-4 text-left align-middle font-medium text-muted-foreground">Product Details</th>
+                            <th class="h-12 px-4 text-left align-middle font-medium text-muted-foreground hidden md:table-cell">Category</th>
+                            <th class="h-12 px-4 text-left align-middle font-medium text-muted-foreground">Price</th>
+                            <th class="h-12 px-4 text-left align-middle font-medium text-muted-foreground hidden sm:table-cell">Inventory</th>
+                            <th class="h-12 px-4 text-left align-middle font-medium text-muted-foreground">Status</th>
+                            <th class="h-12 px-4 text-right align-middle font-medium text-muted-foreground">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody class="[&_tr:last-child]:border-0">
                         @forelse($products as $product)
-                            <div class="p-6 space-y-4">
-                                <div class="flex items-start space-x-4">
-                                    <div class="flex-shrink-0">
+                            <tr class="border-b transition-colors hover:bg-muted/50 product-row" data-name="{{ strtolower($product->name) }}" data-sku="{{ strtolower($product->sku) }}">
+                                <td class="p-4 align-middle">
+                                    <div class="h-12 w-12 rounded-lg border bg-background flex items-center justify-center overflow-hidden">
                                         @if($product->image)
-                                            <img src="{{ Storage::url($product->image) }}"
-                                                 alt="{{ $product->name }}"
-                                                 class="w-16 h-16 object-cover rounded-xl">
+                                            <img src="{{ Storage::url($product->image) }}" alt="{{ $product->name }}" class="object-cover h-full w-full">
                                         @else
-                                            <div class="w-16 h-16 bg-gray-100 dark:bg-zinc-700 rounded-xl flex items-center justify-center">
-                                                <svg class="w-8 h-8 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
-                                                </svg>
-                                            </div>
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-muted-foreground/40"><rect width="18" height="18" x="3" y="3" rx="2" ry="2"/><circle cx="9" cy="9" r="2"/><path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21"/></svg>
                                         @endif
                                     </div>
-                                    <div class="flex-1 min-w-0">
-                                        <h4 class="text-base font-semibold text-gray-900 dark:text-white truncate">
+                                </td>
+                                <td class="p-4 align-middle">
+                                    <div class="font-bold text-foreground">
+                                        <a href="{{ route('home.show', $product) }}" class="hover:text-primary transition-colors">
                                             {{ $product->name }}
-                                        </h4>
-                                        <p class="text-sm text-gray-600 dark:text-gray-400">{{ $product->sku }}</p>
-                                        <div class="mt-1">
-                                            <span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-blue-100 text-blue-800 dark:bg-blue-900/50 dark:text-blue-400">
-                                                {{ $product->category }}
-                                            </span>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div class="grid grid-cols-2 gap-4 text-sm">
-                                    <div>
-                                        <p class="text-gray-500 dark:text-gray-400">Price</p>
-                                        <p class="font-semibold text-gray-900 dark:text-white">UGX {{ number_format($product->price) }}</p>
-                                        @if($product->original_price && $product->original_price > $product->price)
-                                            <p class="text-xs text-gray-500 line-through">UGX {{ number_format($product->original_price) }}</p>
-                                        @endif
-                                    </div>
-                                    <div>
-                                        <p class="text-gray-500 dark:text-gray-400">Stock Status</p>
-                                        <span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium
-                                            {{ $product->isOutOfStock() ? 'bg-red-100 text-red-800 dark:bg-red-900/50 dark:text-red-400' :
-                                               'bg-green-100 text-green-800 dark:bg-green-900/50 dark:text-green-400' }}">
-                                            {{ $product->stock_status }}
-                                        </span>
-                                    </div>
-                                </div>
-
-                                <div class="flex items-center justify-between pt-3 border-t border-gray-200 dark:border-zinc-700">
-                                    <div class="flex items-center gap-2">
-                                        <span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium
-                                            {{ $product->is_active ? 'bg-green-100 text-green-800 dark:bg-green-900/50 dark:text-green-400' :
-                                               'bg-red-100 text-red-800 dark:bg-red-900/50 dark:text-red-400' }}">
-                                            {{ $product->is_active ? 'Active' : 'Inactive' }}
-                                        </span>
-                                    </div>
-                                    <div class="flex space-x-3">
-                                        <a href="{{ route('products.edit', $product) }}"
-                                           class="text-indigo-600 dark:text-indigo-400 hover:text-indigo-700 dark:hover:text-indigo-300 text-sm font-medium transition-colors">
-                                            Edit
                                         </a>
-                                        <form action="{{ route('products.destroy', $product) }}" method="POST"
-                                              onsubmit="return confirm('Are you sure you want to delete this product?')" class="inline">
-                                            @csrf
-                                            @method('DELETE')
-                                            <button type="submit"
-                                                    class="text-red-600 dark:text-red-400 hover:text-red-700 dark:hover:text-red-300 text-sm font-medium transition-colors">
-                                                Delete
-                                            </button>
-                                        </form>
                                     </div>
-                                </div>
-                            </div>
-                        @empty
-                            <div class="p-12 text-center">
-                                <svg class="mx-auto h-12 w-12 text-gray-400 dark:text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"></path>
-                                </svg>
-                                <h3 class="mt-4 text-sm font-medium text-gray-900 dark:text-white">No products found</h3>
-                                <p class="mt-2 text-sm text-gray-500 dark:text-gray-400">Get started by creating your first product.</p>
-                            </div>
-                        @endforelse
-                    </div>
-                </div>
-
-                <!-- Desktop Table View (hidden on small screens) -->
-                <div class="hidden lg:block overflow-x-auto">
-                    <table id="productsTable" class="min-w-full divide-y divide-gray-200 dark:divide-zinc-700">
-                        <thead class="bg-gray-50 dark:bg-zinc-900">
-                            <tr>
-                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Image</th>
-                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Product</th>
-                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Category</th>
-                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Price</th>
-                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Stock</th>
-                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Status</th>
-                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Actions</span></th>
-                            </tr>
-                        </thead>
-                        <tbody class="bg-white dark:bg-zinc-800 divide-y divide-gray-200 dark:divide-zinc-700">
-                            @forelse($products as $product)
-                                <tr class="hover:bg-gray-50 dark:hover:bg-zinc-700 transition-colors">
-                                    <td class="px-6 py-4 whitespace-nowrap">
-                                        @if($product->image)
-                                            <img src="{{ Storage::url($product->image) }}"
-                                                 alt="{{ $product->name }}"
-                                                 class="w-12 h-12 object-cover rounded-xl">
-                                        @else
-                                            <div class="w-12 h-12 bg-gray-100 dark:bg-zinc-700 rounded-xl flex items-center justify-center">
-                                                <svg class="w-6 h-6 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
-                                                </svg>
-                                            </div>
-                                        @endif
-                                    </td>
-                                    <td class="px-6 py-4 whitespace-nowrap">
-                                        <div>
-                                            <div class="text-sm font-medium text-gray-900 dark:text-white">
-                                                <a href="{{ route('home.show', $product) }}" class="hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors">
-                                                    {{ $product->name }}
-                                                </a>
-                                            </div>
-                                            <div class="text-sm text-gray-500 dark:text-gray-400">{{ $product->sku }}</div>
-                                            @if($product->brand)
-                                                <div class="text-xs text-gray-400 dark:text-gray-500">{{ $product->brand }}</div>
-                                            @endif
-                                        </div>
-                                    </td>
-                                    <td class="px-6 py-4 whitespace-nowrap">
-                                        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800 dark:bg-blue-900/50 dark:text-blue-400">
-                                            {{ $product->category }}
-                                        </span>
-                                    </td>
-                                    <td class="px-6 py-4 whitespace-nowrap">
-                                        <div>
-                                            <div class="text-sm font-medium text-gray-900 dark:text-white">UGX {{ number_format($product->price) }}</div>
-                                            @if($product->original_price && $product->original_price > $product->price)
-                                                <div class="text-sm text-gray-500 dark:text-gray-400 line-through">UGX {{ number_format($product->original_price) }}</div>
-                                                @if($product->discount_percentage)
-                                                    <div class="text-xs text-green-600 dark:text-green-400 font-medium">-{{ $product->discount_percentage }}%</div>
-                                                @endif
-                                            @endif
-                                        </div>
-                                    </td>
-                                    <td class="px-6 py-4 whitespace-nowrap">
-                                        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium
-                                            {{ $product->isOutOfStock() ? 'bg-red-100 text-red-800 dark:bg-red-900/50 dark:text-red-400' :
-                                               'bg-green-100 text-green-800 dark:bg-green-900/50 dark:text-green-400' }}">
+                                    <div class="text-xs font-mono text-muted-foreground">{{ $product->sku }}</div>
+                                    @if($product->brand)
+                                        <div class="text-xs text-muted-foreground/80 mt-1 italic">{{ $product->brand }}</div>
+                                    @endif
+                                </td>
+                                <td class="p-4 align-middle hidden md:table-cell">
+                                    <x-ui.badge variant="secondary" class="font-medium">
+                                        {{ $product->category }}
+                                    </x-ui.badge>
+                                </td>
+                                <td class="p-4 align-middle">
+                                    <div class="font-bold text-primary">UGX {{ number_format($product->price) }}</div>
+                                    @if($product->original_price && $product->original_price > $product->price)
+                                        <div class="text-xs text-muted-foreground line-through">UGX {{ number_format($product->original_price) }}</div>
+                                        <div class="text-[10px] text-green-600 font-bold uppercase tracking-tighter">Save {{ $product->discount_percentage }}%</div>
+                                    @endif
+                                </td>
+                                <td class="p-4 align-middle hidden sm:table-cell">
+                                    <div class="flex flex-col gap-1">
+                                        <x-ui.badge :variant="$product->isOutOfStock() ? 'destructive' : 'outline'" class="w-fit">
                                             {{ $product->stock_status }}
-                                        </span>
-                                    </td>
-                                    <td class="px-6 py-4 whitespace-nowrap">
-                                        <div class="flex items-center space-x-2">
-                                            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium
-                                                {{ $product->is_active ? 'bg-green-100 text-green-800 dark:bg-green-900/50 dark:text-green-400' :
-                                                   'bg-red-100 text-red-800 dark:bg-red-900/50 dark:text-red-400' }}">
-                                                {{ $product->is_active ? 'Active' : 'Inactive' }}
-                                            </span>
-                                            @if($product->isOutOfStock())
-                                                <div class="text-xs text-red-600 dark:text-red-400 font-medium">Auto-disabled</div>
-                                            @endif
+                                        </x-ui.badge>
+                                        <span class="text-[10px] text-muted-foreground ml-1">Stock on hand</span>
+                                    </div>
+                                </td>
+                                <td class="p-4 align-middle">
+                                    <x-ui.badge :variant="$product->is_active ? 'default' : 'secondary'">
+                                        {{ $product->is_active ? 'Active' : 'Inactive' }}
+                                    </x-ui.badge>
+                                </td>
+                                <td class="p-4 align-middle text-right">
+                                    <div class="flex items-center justify-end gap-2">
+                                        <x-ui.button variant="ghost" size="icon" :href="route('products.edit', $product)" title="Edit" wire:navigate>
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-muted-foreground hover:text-primary transition-colors"><path d="M12 22h6.5"/><path d="M12 14.5l6.469-6.469a1 1 0 0 0-1.414-1.414L10.586 13.086a1 1 0 0 0-.293.707V15.5h1.707a1 1 0 0 0 .707-.293Z"/></svg>
+                                        </x-ui.button>
+                                        <x-ui.button
+                                            variant="ghost"
+                                            size="icon"
+                                            type="button"
+                                            class="group product-delete-button"
+                                            data-delete-url="{{ route('products.destroy', $product) }}"
+                                            data-product-name="{{ $product->name }}"
+                                        >
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-muted-foreground group-hover:text-destructive transition-colors"><path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/><line x1="10" x2="10" y1="11" y2="17"/><line x1="14" x2="14" y1="11" y2="17"/></svg>
+                                        </x-ui.button>
+                                    </div>
+                                </td>
+                            </tr>
+                        @empty
+                            <tr>
+                                <td colspan="7" class="p-24 text-center">
+                                    <div class="flex flex-col items-center gap-2">
+                                        <div class="bg-muted p-4 rounded-full">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-muted-foreground"><path d="M21 8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16Z"/><path d="m3.3 7 8.7 5 8.7-5"/><path d="M12 22V12"/></svg>
                                         </div>
-                                    </td>
-                                    <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                                        <div class="flex items-center justify-end space-x-3">
-                                            <a href="{{ route('products.edit', $product) }}"
-                                               class="text-indigo-600 dark:text-indigo-400 hover:text-indigo-700 dark:hover:text-indigo-300 transition-colors"
-                                               title="Edit product">
-                                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
-                                                </svg>
-                                            </a>
-                                            <form action="{{ route('products.destroy', $product) }}" method="POST"
-                                                  onsubmit="return confirm('Are you sure you want to delete this product? This action cannot be undone.')"
-                                                  class="inline">
-                                                @csrf
-                                                @method('DELETE')
-                                                <button type="submit"
-                                                        class="text-red-600 dark:text-red-400 hover:text-red-700 dark:hover:text-red-300 transition-colors"
-                                                        title="Delete product">
-                                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
-                                                    </svg>
-                                                </button>
-                                            </form>
-                                        </div>
-                                    </td>
-                                </tr>
-                            @empty
-                                <tr>
-                                    <td colspan="7" class="px-6 py-12 text-center">
-                                        <div class="flex flex-col items-center">
-                                            <svg class="w-12 h-12 text-gray-400 dark:text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"></path>
-                                            </svg>
-                                            <h3 class="mt-4 text-sm font-medium text-gray-900 dark:text-white">No products found</h3>
-                                            <p class="mt-2 text-sm text-gray-500 dark:text-gray-400">Get started by creating your first product.</p>
-                                        </div>
-                                    </td>
-                                </tr>
-                            @endforelse
-                        </tbody>
-                    </table>
-                </div>
+                                        <h3 class="text-xl font-bold">No products found</h3>
+                                        <p class="text-muted-foreground">Get started by creating your first product listing.</p>
+                                        <x-ui.button :href="route('products.create')" class="mt-4" wire:navigate>Create Product</x-ui.button>
+                                    </div>
+                                </td>
+                            </tr>
+                        @endforelse
+                    </tbody>
+                </table>
             </div>
-        </div>
+
+            @if($products instanceof \Illuminate\Pagination\LengthAwarePaginator && $products->hasPages())
+                <div class="p-6 border-t">
+                    {{ $products->links() }}
+                </div>
+            @endif
+        </x-ui.card>
     </div>
 
+    <x-ui.modal name="confirm-delete-product">
+        <form id="product-delete-form" method="POST" action="" class="space-y-6">
+            @csrf
+            @method('DELETE')
+
+            <div class="space-y-2">
+                <h2 class="text-xl font-bold text-destructive">Confirm delete</h2>
+                <p class="text-sm text-muted-foreground">
+                    Are you sure you want to delete <span id="delete-product-name" class="font-semibold"></span>? This action cannot be undone.
+                </p>
+            </div>
+
+            <div class="flex justify-end gap-3">
+                <x-ui.button
+                    variant="outline"
+                    type="button"
+                    x-on:click="$dispatch('close-modal', 'confirm-delete-product')"
+                >
+                    Cancel
+                </x-ui.button>
+
+                <x-ui.button variant="destructive" type="submit">
+                    Delete Product
+                </x-ui.button>
+            </div>
+        </form>
+    </x-ui.modal>
+
     @push('scripts')
-    <!-- DataTables CSS and JS -->
-    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.13.7/css/jquery.dataTables.css">
-    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/responsive/2.5.0/css/responsive.dataTables.min.css">
-    <script type="text/javascript" src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
-    <script type="text/javascript" src="https://cdn.datatables.net/1.13.7/js/jquery.dataTables.min.js"></script>
-    <script type="text/javascript" src="https://cdn.datatables.net/responsive/2.5.0/js/dataTables.responsive.min.js"></script>
-
     <script>
-        $(document).ready(function() {
-            // Only initialize DataTable on desktop (screens wider than 1024px)
-            if (window.innerWidth >= 1024) {
-                $('#productsTable').DataTable({
-                    responsive: true,
-                    pageLength: 25,
-                    lengthMenu: [[10, 25, 50, -1], [10, 25, 50, "All"]],
-                    order: [[1, 'asc']], // Sort by name column
-                    language: {
-                        search: "Search products:",
-                        lengthMenu: "Show _MENU_ products per page",
-                        info: "Showing _START_ to _END_ of _TOTAL_ products",
-                        infoEmpty: "Showing 0 to 0 of 0 products",
-                        infoFiltered: "(filtered from _MAX_ total products)",
-                        paginate: {
-                            first: "First",
-                            last: "Last",
-                            next: "Next",
-                            previous: "Previous"
-                        }
-                    },
-                    columnDefs: [
-                        {
-                            targets: [0, 6], // Image and Actions columns
-                            orderable: false,
-                            searchable: false
-                        }
-                    ],
-                    dom: '<"flex flex-col sm:flex-row justify-between items-center mb-6"lf>rt<"flex flex-col sm:flex-row justify-between items-center mt-6"ip>',
-                    initComplete: function() {
-                        // Add custom styling to DataTables elements
-                        $('.dataTables_wrapper').addClass('text-gray-900 dark:text-white');
-                        $('.dataTables_filter input').addClass('px-3 py-2 border border-gray-300 dark:border-zinc-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 dark:bg-zinc-700 dark:text-white');
-                        $('.dataTables_length select').addClass('px-3 py-2 border border-gray-300 dark:border-zinc-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 dark:bg-zinc-700 dark:text-white');
-                        $('.dataTables_paginate .paginate_button').addClass('px-3 py-2 mx-1 text-sm font-medium text-gray-500 dark:text-gray-400 bg-white dark:bg-zinc-800 border border-gray-300 dark:border-zinc-600 rounded-lg hover:bg-gray-50 dark:hover:bg-zinc-700 hover:text-gray-700 dark:hover:text-white transition-colors');
-                        $('.dataTables_paginate .paginate_button.current').addClass('!bg-indigo-600 !text-white !border-indigo-600 hover:!bg-indigo-700 dark:!bg-indigo-600 dark:!border-indigo-600 dark:hover:!bg-indigo-700');
-                    }
-                });
-            }
+        (function() {
+            const initProductTable = function() {
+                const searchInput = document.getElementById('tableSearch');
+                const rows = document.querySelectorAll('.product-row');
+                const deleteButtons = document.querySelectorAll('.product-delete-button');
+                const deleteForm = document.getElementById('product-delete-form');
+                const deleteProductName = document.getElementById('delete-product-name');
 
-            // Handle window resize to reinitialize DataTable if needed
-            let resizeTimer;
-            $(window).on('resize', function() {
-                clearTimeout(resizeTimer);
-                resizeTimer = setTimeout(function() {
-                    const isDesktop = window.innerWidth >= 1024;
-                    const tableExists = $.fn.DataTable.isDataTable('#productsTable');
+                if (searchInput) {
+                    searchInput.addEventListener('input', function(e) {
+                        const term = e.target.value.toLowerCase();
 
-                    if (isDesktop && !tableExists) {
-                        // Initialize DataTable for desktop view
-                        $('#productsTable').DataTable({
-                            responsive: true,
-                            pageLength: 25,
-                            lengthMenu: [[10, 25, 50, -1], [10, 25, 50, "All"]],
-                            order: [[1, 'asc']],
-                            columnDefs: [
-                                {
-                                    targets: [0, 6],
-                                    orderable: false,
-                                    searchable: false
-                                }
-                            ]
+                        rows.forEach(row => {
+                            const name = row.getAttribute('data-name');
+                            const sku = row.getAttribute('data-sku');
+
+                            if (name.includes(term) || sku.includes(term)) {
+                                row.style.display = '';
+                            } else {
+                                row.style.display = 'none';
+                            }
                         });
-                    } else if (!isDesktop && tableExists) {
-                        // Destroy DataTable for mobile view
-                        $('#productsTable').DataTable().destroy();
-                    }
-                }, 250);
-            });
-        });
+                    });
+                }
+
+                deleteButtons.forEach(button => {
+                    button.addEventListener('click', function() {
+                        if (deleteForm && deleteProductName) {
+                            deleteForm.action = this.dataset.deleteUrl;
+                            deleteProductName.textContent = this.dataset.productName;
+                            window.dispatchEvent(new CustomEvent('open-modal', { detail: 'confirm-delete-product' }));
+                        }
+                    });
+                });
+            };
+
+            if (document.readyState === 'loading') {
+                document.addEventListener('DOMContentLoaded', initProductTable);
+            } else {
+                initProductTable();
+            }
+        })();
     </script>
     @endpush
 </x-layouts.app>

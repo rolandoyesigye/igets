@@ -37,40 +37,57 @@ new class extends Component {
     }
 }; ?>
 
-<section class="w-full">
-    @include('partials.settings-heading')
-
+<section class="max-w-2xl">
     <x-settings.layout :heading="__('Update password')" :subheading="__('Ensure your account is using a long, random password to stay secure')">
         <form wire:submit="updatePassword" class="mt-6 space-y-6">
-            <flux:input
-                wire:model="current_password"
-                :label="__('Current password')"
-                type="password"
-                required
-                autocomplete="current-password"
-            />
-            <flux:input
-                wire:model="password"
-                :label="__('New password')"
-                type="password"
-                required
-                autocomplete="new-password"
-            />
-            <flux:input
-                wire:model="password_confirmation"
-                :label="__('Confirm Password')"
-                type="password"
-                required
-                autocomplete="new-password"
-            />
-
-            <div class="flex items-center gap-4">
-                <div class="flex items-center justify-end">
-                    <flux:button variant="primary" type="submit" class="w-full">{{ __('Save') }}</flux:button>
+            <div class="space-y-4">
+                <div class="grid gap-2">
+                    <x-ui.label for="current_password">{{ __('Current password') }}</x-ui.label>
+                    <x-ui.input
+                        wire:model="current_password"
+                        id="current_password"
+                        type="password"
+                        required
+                        autocomplete="current-password"
+                        placeholder="••••••••"
+                    />
+                    @error('current_password') <p class="text-xs text-destructive">{{ $message }}</p> @enderror
                 </div>
 
-                <x-action-message class="me-3" on="password-updated">
-                    {{ __('Saved.') }}
+                <div class="grid gap-2">
+                    <x-ui.label for="password">{{ __('New password') }}</x-ui.label>
+                    <x-ui.input
+                        wire:model="password"
+                        id="password"
+                        type="password"
+                        required
+                        autocomplete="new-password"
+                        placeholder="Minimum 8 characters"
+                    />
+                    @error('password') <p class="text-xs text-destructive">{{ $message }}</p> @enderror
+                </div>
+
+                <div class="grid gap-2">
+                    <x-ui.label for="password_confirmation">{{ __('Confirm Password') }}</x-ui.label>
+                    <x-ui.input
+                        wire:model="password_confirmation"
+                        id="password_confirmation"
+                        type="password"
+                        required
+                        autocomplete="new-password"
+                        placeholder="••••••••"
+                    />
+                    @error('password_confirmation') <p class="text-xs text-destructive">{{ $message }}</p> @enderror
+                </div>
+            </div>
+
+            <div class="flex items-center gap-4">
+                <x-ui.button variant="default" type="submit">
+                    {{ __('Update Password') }}
+                </x-ui.button>
+
+                <x-action-message class="text-sm text-muted-foreground italic" on="password-updated">
+                    {{ __('Password updated successfully.') }}
                 </x-action-message>
             </div>
         </form>

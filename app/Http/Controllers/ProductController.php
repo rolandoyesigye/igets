@@ -11,12 +11,14 @@ use Illuminate\Support\Str;
 class ProductController extends Controller
 {
     use ToastrNotifications;
+
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
         $products = Product::latest()->paginate(12);
+
         return view('products.index', compact('products'));
     }
 
@@ -52,18 +54,18 @@ class ProductController extends Controller
         // Handle image upload
         if ($request->hasFile('image')) {
             $image = $request->file('image');
-            $imageName = time() . '_' . Str::slug($request->name) . '.' . $image->getClientOriginalExtension();
+            $imageName = time().'_'.Str::slug($request->name).'.'.$image->getClientOriginalExtension();
             $imagePath = $image->storeAs('products', $imageName, 'public');
             $data['image'] = $imagePath;
         }
 
         // Generate SKU if not provided
         if (empty($data['sku'])) {
-            $data['sku'] = 'SKU-' . strtoupper(Str::random(8));
+            $data['sku'] = 'SKU-'.strtoupper(Str::random(8));
         }
 
         // Calculate discount percentage if original price is provided
-        if (!empty($data['original_price']) && $data['original_price'] > $data['price']) {
+        if (! empty($data['original_price']) && $data['original_price'] > $data['price']) {
             $data['discount_percentage'] = round((($data['original_price'] - $data['price']) / $data['original_price']) * 100);
         }
 
@@ -84,7 +86,6 @@ class ProductController extends Controller
     /**
      * Display the specified resource.
      */
-
 
     /**
      * Show the form for editing the specified resource.
@@ -107,7 +108,7 @@ class ProductController extends Controller
             'brand' => 'nullable|string|max:255',
             'category' => 'required|string|max:255',
             'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:2048',
-            'sku' => 'nullable|string|unique:products,sku,' . $product->id,
+            'sku' => 'nullable|string|unique:products,sku,'.$product->id,
             'stock_quantity' => 'nullable|integer|min:0',
             'condition' => 'nullable|string|in:new,used,refurbished',
             'warranty' => 'nullable|string|max:255',
@@ -121,15 +122,15 @@ class ProductController extends Controller
             if ($product->image) {
                 Storage::disk('public')->delete($product->image);
             }
-            
+
             $image = $request->file('image');
-            $imageName = time() . '_' . Str::slug($request->name) . '.' . $image->getClientOriginalExtension();
+            $imageName = time().'_'.Str::slug($request->name).'.'.$image->getClientOriginalExtension();
             $imagePath = $image->storeAs('products', $imageName, 'public');
             $data['image'] = $imagePath;
         }
 
         // Calculate discount percentage if original price is provided
-        if (!empty($data['original_price']) && $data['original_price'] > $data['price']) {
+        if (! empty($data['original_price']) && $data['original_price'] > $data['price']) {
             $data['discount_percentage'] = round((($data['original_price'] - $data['price']) / $data['original_price']) * 100);
         }
 

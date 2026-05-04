@@ -14,6 +14,7 @@ class AccountController extends Controller
     public function index()
     {
         $user = Auth::user();
+
         return view('home.account_setting', compact('user'));
     }
 
@@ -36,5 +37,4 @@ class AccountController extends Controller
 
         return redirect()->back()->with('success', 'Profile updated successfully!');
     }
-
 }

@@ -29,11 +29,12 @@ class UpdateOutOfStockProducts extends Command
         $this->info('Checking for products with zero stock...');
 
         $outOfStockProducts = Product::where('stock_quantity', '<=', 0)
-                                    ->where('is_active', true)
-                                    ->get();
+            ->where('is_active', true)
+            ->get();
 
         if ($outOfStockProducts->isEmpty()) {
             $this->info('No products found that need to be updated.');
+
             return 0;
         }
 

@@ -2,9 +2,9 @@
 
 namespace App\Providers;
 
+use App\Listeners\TransferGuestCartToUser;
 use Illuminate\Auth\Events\Login;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
-use App\Listeners\TransferGuestCartToUser;
 
 class EventServiceProvider extends ServiceProvider
 {
@@ -29,5 +29,3 @@ class EventServiceProvider extends ServiceProvider
         //
     }
 }
-
-

@@ -2,10 +2,10 @@
 
 namespace Tests\Feature;
 
-use Tests\TestCase;
-use App\Models\User;
 use App\Models\Product;
+use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Tests\TestCase;
 
 class ToastrTest extends TestCase
 {
@@ -14,26 +14,33 @@ class ToastrTest extends TestCase
     public function test_success_toast_notification()
     {
         $user = User::factory()->create();
-        
+
         $response = $this->actingAs($user)
+            ->withSession(['success' => 'Test success message'])
             ->get('/cart');
-            
+
         $response->assertStatus(200);
         $response->assertSee('toastr.success');
+        $response->assertSee('Test success message');
     }
 
     public function test_error_toast_notification()
     {
-        $response = $this->get('/cart');
-        
+        $user = User::factory()->create();
+
+        $response = $this->actingAs($user)
+            ->withSession(['error' => 'Test error message'])
+            ->get('/cart');
+
         $response->assertStatus(200);
         $response->assertSee('toastr.error');
+        $response->assertSee('Test error message');
     }
 
     public function test_toastr_css_and_js_loaded()
     {
         $response = $this->get('/');
-        
+
         $response->assertStatus(200);
         $response->assertSee('toastr.min.css');
         $response->assertSee('toastr.min.js');
@@ -43,16 +50,28 @@ class ToastrTest extends TestCase
     {
         $user = User::factory()->create();
         $product = Product::factory()->create([
-            'is_active' => true
+            'is_active' => true,
+            'stock_quantity' => 10,
         ]);
 
         $response = $this->actingAs($user)
+            ->from(route('home.show', $product->id))
             ->post('/cart/add', [
                 'product_id' => $product->id,
-                'quantity' => 1
+                'quantity' => 1,
             ]);
 
         $response->assertRedirect();
-        $response->assertSessionHas('success');
+        
+        $hasSuccess = $response->getSession()->has('success');
+        $hasFlasher = $response->getSession()->has('flasher::envelopes');
+        
+        $this->assertTrue($hasSuccess || $hasFlasher, 'Neither success session nor flasher envelopes found');
+
+        if ($hasFlasher && !$hasSuccess) {
+            $envelopes = $response->getSession()->get('flasher::envelopes');
+            $this->assertEquals('success', $envelopes[0]->getNotification()->getType());
+            $this->assertStringContainsString('Product added to cart successfully!', $envelopes[0]->getNotification()->getMessage());
+        }
     }
-} 
+}

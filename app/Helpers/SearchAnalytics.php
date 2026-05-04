@@ -10,7 +10,7 @@ class SearchAnalytics
     /**
      * Track a search query
      */
-    public static function trackSearch(string $query, int $resultsCount = 0, string $userId = null)
+    public static function trackSearch(string $query, int $resultsCount = 0, ?string $userId = null)
     {
         try {
             $searchData = [
@@ -23,7 +23,7 @@ class SearchAnalytics
             ];
 
             // Store in cache for processing
-            $cacheKey = 'search_analytics_' . md5($query . $userId . time());
+            $cacheKey = 'search_analytics_'.md5($query.$userId.time());
             Cache::put($cacheKey, $searchData, now()->addHours(24));
 
             // Update popular searches
@@ -38,7 +38,7 @@ class SearchAnalytics
         } catch (\Exception $e) {
             Log::error('Failed to track search analytics', [
                 'query' => $query,
-                'error' => $e->getMessage()
+                'error' => $e->getMessage(),
             ]);
         }
     }
@@ -58,7 +58,7 @@ class SearchAnalytics
                 'ip_address' => request()->ip(),
             ];
 
-            $cacheKey = 'search_click_' . md5($query . $productId . time());
+            $cacheKey = 'search_click_'.md5($query.$productId.time());
             Cache::put($cacheKey, $clickData, now()->addHours(24));
 
             Log::info('Search product click tracked', $clickData);
@@ -66,7 +66,7 @@ class SearchAnalytics
             Log::error('Failed to track search click', [
                 'query' => $query,
                 'product_id' => $productId,
-                'error' => $e->getMessage()
+                'error' => $e->getMessage(),
             ]);
         }
     }
@@ -172,7 +172,8 @@ class SearchAnalytics
      */
     protected static function getTodaySearchCount(): int
     {
-        $cacheKey = 'search_count_' . now()->format('Y-m-d');
+        $cacheKey = 'search_count_'.now()->format('Y-m-d');
+
         return Cache::get($cacheKey, 0);
     }
 
@@ -181,7 +182,7 @@ class SearchAnalytics
      */
     public static function incrementTodaySearchCount(): void
     {
-        $cacheKey = 'search_count_' . now()->format('Y-m-d');
+        $cacheKey = 'search_count_'.now()->format('Y-m-d');
         $count = Cache::get($cacheKey, 0);
         Cache::put($cacheKey, $count + 1, now()->endOfDay());
     }
@@ -220,7 +221,7 @@ class SearchAnalytics
             'popular_searches',
             'zero_results_searches',
             'avg_results_per_search',
-            'avg_results_count'
+            'avg_results_count',
         ];
 
         foreach ($keys as $key) {
@@ -230,7 +231,7 @@ class SearchAnalytics
         // Clear daily search counts
         for ($i = 0; $i < 30; $i++) {
             $date = now()->subDays($i)->format('Y-m-d');
-            Cache::forget('search_count_' . $date);
+            Cache::forget('search_count_'.$date);
         }
     }
 

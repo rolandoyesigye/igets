@@ -2,15 +2,14 @@
 
 namespace Tests\Feature;
 
-use Tests\TestCase;
-use App\Models\User;
-use App\Models\Product;
 use App\Models\Cart;
+use App\Models\Product;
+use App\Models\User;
 use App\Services\CartService;
-use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Session;
 use Illuminate\Auth\Events\Login;
+use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\Session;
+use Tests\TestCase;
 
 class CartTransferTest extends TestCase
 {
@@ -23,7 +22,7 @@ class CartTransferTest extends TestCase
         $product = Product::factory()->create([
             'name' => 'Test Product',
             'price' => 100.00,
-            'is_active' => true
+            'is_active' => true,
         ]);
 
         // Add item to session cart
@@ -34,7 +33,7 @@ class CartTransferTest extends TestCase
         $this->assertEquals(2, session('cart')[$product->id]);
 
         // Test the transfer
-        $cartService = new CartService();
+        $cartService = new CartService;
         $cartService->transferSessionToUser($user->id);
 
         // Verify item was transferred to database
@@ -42,7 +41,7 @@ class CartTransferTest extends TestCase
             'user_id' => $user->id,
             'product_id' => $product->id,
             'quantity' => 2,
-            'price' => 100.00
+            'price' => 100.00,
         ]);
 
         // Verify session cart was cleared
@@ -56,7 +55,7 @@ class CartTransferTest extends TestCase
         $product = Product::factory()->create([
             'name' => 'Test Product',
             'price' => 100.00,
-            'is_active' => true
+            'is_active' => true,
         ]);
 
         // Add item to user's database cart
@@ -64,14 +63,14 @@ class CartTransferTest extends TestCase
             'user_id' => $user->id,
             'product_id' => $product->id,
             'quantity' => 1,
-            'price' => 100.00
+            'price' => 100.00,
         ]);
 
         // Add same item to session cart
         session(['cart' => [$product->id => 3]]);
 
         // Test the transfer
-        $cartService = new CartService();
+        $cartService = new CartService;
         $cartService->transferSessionToUser($user->id);
 
         // Verify quantities were merged
@@ -79,7 +78,7 @@ class CartTransferTest extends TestCase
             'user_id' => $user->id,
             'product_id' => $product->id,
             'quantity' => 4, // 1 + 3
-            'price' => 100.00
+            'price' => 100.00,
         ]);
 
         // Verify only one cart item exists (not duplicated)
@@ -92,13 +91,13 @@ class CartTransferTest extends TestCase
         $product = Product::factory()->create([
             'name' => 'Test Product',
             'price' => 100.00,
-            'is_active' => true
+            'is_active' => true,
         ]);
 
         // Add item to cart as guest
         $response = $this->post('/cart/add', [
             'product_id' => $product->id,
-            'quantity' => 2
+            'quantity' => 2,
         ]);
 
         $response->assertRedirect();
@@ -113,7 +112,7 @@ class CartTransferTest extends TestCase
         $product = Product::factory()->create([
             'name' => 'Test Product',
             'price' => 100.00,
-            'is_active' => true
+            'is_active' => true,
         ]);
 
         // Add item to session cart
@@ -131,10 +130,10 @@ class CartTransferTest extends TestCase
             'user_id' => $user->id,
             'product_id' => $product->id,
             'quantity' => 2,
-            'price' => 100.00
+            'price' => 100.00,
         ]);
 
         // Verify session cart was cleared
         $this->assertFalse(session()->has('cart'));
     }
-} 
+}

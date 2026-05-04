@@ -317,60 +317,72 @@
       <div class="flex gap-1 md:gap-2 md:flex-wrap md:justify-center min-w-max md:min-w-0">
         @forelse($laptops as $laptop)
       <!-- Product Card -->
-          <a href="{{ route('home.show', $laptop) }}" class="block flex-shrink-0 w-au md:w-auto">
-            <div class="relative bg-white shadow rounded p-2 hover:transition duration-500 ease-in-out hover:bg-gray-100 transform hover:-translate-y-1 hover:scale-110 product-card">
-            @if($laptop->condition)
-              <span class="absolute top-2 left-2 bg-blue-500 text-white text-xs px-2 py-0.5 rounded-full">
-                {{ ucfirst($laptop->condition) }}
-              </span>
-            @endif
-            @if($laptop->image)
-              <img src="{{ Storage::url($laptop->image) }}" alt="{{ $laptop->name }}" class="w-full h-32 object-cover rounded mb-2" />
-            @else
-              <div class="w-full h-32 bg-blue-100 rounded mb-2 flex items-center justify-center">
-                <svg class="w-8 h-8 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
-                </svg>
-              </div>
-            @endif
-            <h3 class="text-sm font-semibold truncate">{{ $laptop->name }}</h3>
-            <p class="text-green-600 font-bold text-sm">UGX {{ number_format($laptop->price) }}</p>
-            @if($laptop->original_price && $laptop->original_price > $laptop->price)
-              <p class="line-through text-xs text-gray-500">UGX {{ number_format($laptop->original_price) }}</p>
-            @endif
+          <div class="min-w-0 flex-shrink-0 w-56 md:w-60 lg:w-64">
+            <div class="relative bg-white shadow rounded p-2 transition duration-500 ease-in-out hover:bg-gray-100 md:transform md:hover:-translate-y-1 md:hover:scale-105 min-w-0 overflow-hidden">
+              @if($laptop->condition)
+                <span class="absolute top-2 left-2 bg-blue-500 text-white text-xs px-2 py-0.5 rounded-full">
+                  {{ ucfirst($laptop->condition) }}
+                </span>
+              @endif
 
-            <!-- Stock Status -->
-            <p class="text-xs {{ $laptop->stock_status_color }} font-medium">{{ $laptop->stock_status }}</p>
+              <a href="{{ route('home.show', $laptop) }}" class="block min-w-0">
+                @if($laptop->image)
+                  <img src="{{ Storage::url($laptop->image) }}" alt="{{ $laptop->name }}"
+                       class="w-full h-32 object-cover rounded mb-2" />
+                @else
+                  <div class="w-full h-32 bg-blue-100 rounded mb-2 flex items-center justify-center">
+                    <svg class="w-8 h-8 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2
+                               l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12
+                               a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12
+                               a2 2 0 002 2z"/>
+                    </svg>
+                  </div>
+                @endif
 
-            <!-- Add to Cart Button -->
-            @if($laptop->isInStock())
-            <form action="{{ route('cart.add') }}" method="POST" class="mt-2" onclick="event.stopPropagation();">
-                @csrf
-                <input type="hidden" name="product_id" value="{{ $laptop->id }}">
-                <input type="hidden" name="quantity" value="1">
+                <h3 class="text-sm font-semibold truncate overflow-hidden">{{ $laptop->name }}</h3>
+              </a>
+              <p class="text-green-600 font-bold text-sm">UGX {{ number_format($laptop->price) }}</p>
 
-                <div class="flex flex-col md:flex-row gap-2">
+              @if($laptop->original_price && $laptop->original_price > $laptop->price)
+                <p class="line-through text-xs text-blue-500">
+                  UGX {{ number_format($laptop->original_price) }}
+                </p>
+              @endif
+
+              <!-- Stock Status -->
+              <p class="text-xs {{ $laptop->stock_status_color }} font-medium">{{ $laptop->stock_status }}</p>
+
+              <!-- Add to Cart -->
+              @if($laptop->isInStock())
+                <form action="{{ route('cart.add') }}" method="POST" class="mt-2">
+                  @csrf
+                  <input type="hidden" name="product_id" value="{{ $laptop->id }}">
+                  <input type="hidden" name="quantity" value="1">
+
+                  <div class="flex flex-col gap-2 items-center">
                     <!-- Add to Cart (visible on all screens) -->
                     <button type="submit"
-                            class="w-full bg-blue-500 text-white text-xs py-2 px-4 rounded hover:bg-blue-600 transition">
-                        Add to Cart
+                            class="w-full bg-blue-500 text-white text-xs py-2 px-3 rounded hover:bg-green-600 transition">
+                      Add to Cart
                     </button>
 
                     <!-- WhatsApp Button (visible only on small screens) -->
                     <a href="https://wa.me/256701482381?text=I'm%20interested%20in%20{{ urlencode($laptop->name) }}%20priced%20at%20UGX%20{{ number_format($laptop->price) }}%20is%20it%20still%20available?"
                       target="_blank"
-                      class="block md:hidden w-full bg-green-500 text-white text-xs py-2 px-4 rounded hover:bg-green-600 transition text-center">
+                      class="block md:hidden w-full bg-green-500 text-white text-xs py-2 px-3 rounded hover:bg-green-600 transition text-center">
                         <i class="fab fa-whatsapp mr-1"></i> WhatsApp Us
                     </a>
+                  </div>
+                </form>
+              @else
+                <div class="mt-2 text-center">
+                  <span class="text-xs text-red-600 font-medium">Out of Stock</span>
                 </div>
-            </form>
-            @else
-              <div class="mt-2 text-center">
-                <span class="text-xs text-red-600">Out of Stock</span>
-              </div>
-            @endif
+              @endif
             </div>
-          </a>
+          </div>
         @empty
           <div class="col-span-full text-center py-8">
             <p class="text-gray-500">No laptops available at the moment.</p>
@@ -402,61 +414,72 @@
       <div class="flex gap-1 md:gap-2 md:flex-wrap md:justify-center min-w-max md:min-w-0">
         @forelse($accessories as $accessory)
         <!-- Product Card -->
-          <a href="{{ route('home.show', $accessory) }}" class="block flex-shrink-0 w-48 md:w-auto">
-            <div class="relative bg-white shadow rounded p-2 hover:transition duration-500 ease-in-out hover:bg-gray-100 transform hover:-translate-y-1 hover:scale-110 product-card">
-            @if($accessory->condition)
-              <span class="absolute top-2 left-2 bg-blue-500 text-white text-xs px-2 py-0.5 rounded-full">
-                {{ ucfirst($accessory->condition) }}
-              </span>
-            @endif
-            @if($accessory->image)
-              <img src="{{ Storage::url($accessory->image) }}" alt="{{ $accessory->name }}" class="w-full h-32 object-cover rounded mb-2" />
-            @else
-              <div class="w-full h-32 bg-blue-100 rounded mb-2 flex items-center justify-center">
-                <svg class="w-8 h-8 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
-                </svg>
-              </div>
-            @endif
-            <h3 class="text-sm font-semibold truncate">{{ $accessory->name }}</h3>
-            <p class="text-green-600 font-bold text-sm">UGX {{ number_format($accessory->price) }}</p>
-            @if($accessory->original_price && $accessory->original_price > $accessory->price)
-              <p class="line-through text-xs text-gray-500">UGX {{ number_format($accessory->original_price) }}</p>
-            @endif
+          <div class="min-w-0 flex-shrink-0 w-48 md:w-56 lg:w-60">
+            <div class="relative bg-white shadow rounded p-2 transition duration-500 ease-in-out hover:bg-gray-100 md:transform md:hover:-translate-y-1 md:hover:scale-105 min-w-0 overflow-hidden">
+              @if($accessory->condition)
+                <span class="absolute top-2 left-2 bg-blue-500 text-white text-xs px-2 py-0.5 rounded-full">
+                  {{ ucfirst($accessory->condition) }}
+                </span>
+              @endif
 
-            <!-- Stock Status -->
-            <p class="text-xs {{ $accessory->stock_status_color }} font-medium">{{ $accessory->stock_status }}</p>
+              <a href="{{ route('home.show', $accessory) }}" class="block min-w-0">
+                @if($accessory->image)
+                  <img src="{{ Storage::url($accessory->image) }}" alt="{{ $accessory->name }}"
+                       class="w-full h-32 object-cover rounded mb-2" />
+                @else
+                  <div class="w-full h-32 bg-blue-100 rounded mb-2 flex items-center justify-center">
+                    <svg class="w-8 h-8 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2
+                               l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12
+                               a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12
+                               a2 2 0 002 2z"/>
+                    </svg>
+                  </div>
+                @endif
 
-            <!-- Add to Cart Button -->
-            @if($accessory->isInStock())
-            <form action="{{ route('cart.add') }}" method="POST" class="mt-2" onclick="event.stopPropagation();">
+                <h3 class="text-sm font-semibold truncate overflow-hidden">{{ $accessory->name }}</h3>
+              </a>
+              <p class="text-green-600 font-bold text-sm">UGX {{ number_format($accessory->price) }}</p>
+
+              @if($accessory->original_price && $accessory->original_price > $accessory->price)
+                <p class="line-through text-xs text-blue-500">
+                  UGX {{ number_format($accessory->original_price) }}
+                </p>
+              @endif
+
+              <!-- Stock Status -->
+              <p class="text-xs {{ $accessory->stock_status_color }} font-medium">{{ $accessory->stock_status }}</p>
+
+              <!-- Add to Cart -->
+              @if($accessory->isInStock())
+                <form action="{{ route('cart.add') }}" method="POST" class="mt-2">
                   @csrf
                   <input type="hidden" name="product_id" value="{{ $accessory->id }}">
                   <input type="hidden" name="quantity" value="1">
 
-                  <div class="flex flex-col md:flex-row gap-2">
-                      <!-- Add to Cart (visible on all screens) -->
-                      <button type="submit"
-                              class="w-full bg-blue-500 text-white text-xs py-2 px-4 rounded hover:bg-blue-600 transition">
-                          Add to Cart
-                      </button>
+                  <div class="flex flex-col gap-2 items-center">
+                    <!-- Add to Cart (visible on all screens) -->
+                    <button type="submit"
+                            class="w-full bg-blue-500 text-white text-xs py-2 px-3 rounded hover:bg-green-600 transition">
+                      Add to Cart
+                    </button>
 
-                      <!-- WhatsApp Button (visible only on small screens) -->
-                      <a href="https://wa.me/2567014823881?text=I'm%20interested%20in%20{{ urlencode($accessory->name) }}"
-                        target="_blank"
-                        class="block md:hidden w-full bg-green-500 text-white text-xs py-2 px-4 rounded hover:bg-green-600 transition text-center">
-                          <i class="fab fa-whatsapp mr-1"></i> WhatsApp Us
-                      </a>
+                    <!-- WhatsApp Button (visible only on small screens) -->
+                    <a href="https://wa.me/2567014823881?text=I'm%20interested%20in%20{{ urlencode($accessory->name) }}"
+                      target="_blank"
+                      class="block md:hidden w-full bg-green-500 text-white text-xs py-2 px-3 rounded hover:bg-green-600 transition text-center">
+                        <i class="fab fa-whatsapp mr-1"></i> WhatsApp Us
+                    </a>
                   </div>
-              </form>
-
-            @else
-              <div class="mt-2 text-center">
-                <span class="text-xs text-red-600">Out of Stock</span>
-              </div>
-            @endif
+                </form>
+              @else
+                <div class="mt-2 text-center">
+                  <span class="text-xs text-red-600 font-medium">Out of Stock</span>
+                </div>
+              @endif
             </div>
-          </a>
+          </div>
         @empty
           <div class="col-span-full text-center py-8">
             <p class="text-gray-500">No accessories available at the moment.</p>
@@ -486,61 +509,72 @@
       <div class="flex gap-1 md:gap-2 md:flex-wrap md:justify-center min-w-max md:min-w-0">
         @forelse($phones as $phone)
         <!-- Product Card -->
-          <a href="{{ route('home.show', $phone) }}" class="block flex-shrink-0 w-48 md:w-auto">
-            <div class="relative bg-white shadow rounded p-2 hover:transition duration-500 ease-in-out hover:bg-gray-100 transform hover:-translate-y-1 hover:scale-110 product-card">
-            @if($phone->condition)
-              <span class="absolute top-2 left-2 bg-blue-500 text-white text-xs px-2 py-0.5 rounded-full">
-                {{ ucfirst($phone->condition) }}
-              </span>
-            @endif
-            @if($phone->image)
-              <img src="{{ Storage::url($phone->image) }}" alt="{{ $phone->name }}" class="w-full h-32 object-cover rounded mb-2" />
-            @else
-              <div class="w-full h-32 bg-blue-100 rounded mb-2 flex items-center justify-center">
-                <svg class="w-8 h-8 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
-                </svg>
-              </div>
-            @endif
-            <h3 class="text-sm font-semibold truncate">{{ $phone->name }}</h3>
-            <p class="text-green-600 font-bold text-sm">UGX {{ number_format($phone->price) }}</p>
-            @if($phone->original_price && $phone->original_price > $phone->price)
-              <p class="line-through text-xs text-blue-500">UGX {{ number_format($phone->original_price) }}</p>
-            @endif
+          <div class="min-w-0 flex-shrink-0 w-48 md:w-56 lg:w-60">
+            <div class="relative bg-white shadow rounded p-2 transition duration-500 ease-in-out hover:bg-gray-100 md:transform md:hover:-translate-y-1 md:hover:scale-105 min-w-0 overflow-hidden">
+              @if($phone->condition)
+                <span class="absolute top-2 left-2 bg-blue-500 text-white text-xs px-2 py-0.5 rounded-full">
+                  {{ ucfirst($phone->condition) }}
+                </span>
+              @endif
 
-            <!-- Stock Status -->
-            <p class="text-xs {{ $phone->stock_status_color }} font-medium">{{ $phone->stock_status }}</p>
+              <a href="{{ route('home.show', $phone) }}" class="block min-w-0">
+                @if($phone->image)
+                  <img src="{{ Storage::url($phone->image) }}" alt="{{ $phone->name }}"
+                       class="w-full h-32 object-cover rounded mb-2" />
+                @else
+                  <div class="w-full h-32 bg-blue-100 rounded mb-2 flex items-center justify-center">
+                    <svg class="w-8 h-8 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2
+                               l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12
+                               a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12
+                               a2 2 0 002 2z"/>
+                    </svg>
+                  </div>
+                @endif
 
-            <!-- Add to Cart Button -->
-            @if($phone->isInStock())
-            <form action="{{ route('cart.add') }}" method="POST" class="mt-2" onclick="event.stopPropagation();">
-                @csrf
-                <input type="hidden" name="product_id" value="{{ $phone->id }}">
-                <input type="hidden" name="quantity" value="1">
+                <h3 class="text-sm font-semibold truncate overflow-hidden">{{ $phone->name }}</h3>
+              </a>
+              <p class="text-green-600 font-bold text-sm">UGX {{ number_format($phone->price) }}</p>
 
-                <div class="flex flex-col md:flex-row gap-2">
+              @if($phone->original_price && $phone->original_price > $phone->price)
+                <p class="line-through text-xs text-blue-500">
+                  UGX {{ number_format($phone->original_price) }}
+                </p>
+              @endif
+
+              <!-- Stock Status -->
+              <p class="text-xs {{ $phone->stock_status_color }} font-medium">{{ $phone->stock_status }}</p>
+
+              <!-- Add to Cart -->
+              @if($phone->isInStock())
+                <form action="{{ route('cart.add') }}" method="POST" class="mt-2">
+                  @csrf
+                  <input type="hidden" name="product_id" value="{{ $phone->id }}">
+                  <input type="hidden" name="quantity" value="1">
+
+                  <div class="flex flex-col gap-2 items-center">
                     <!-- Add to Cart (visible on all screens) -->
                     <button type="submit"
-                            class="w-full bg-blue-500 text-white text-xs py-2 px-4 rounded hover:bg-blue-600 transition">
-                        Add to Cart
+                            class="w-full bg-blue-500 text-white text-xs py-2 px-3 rounded hover:bg-green-600 transition">
+                      Add to Cart
                     </button>
 
                     <!-- WhatsApp Button (visible only on small screens) -->
                     <a href="https://wa.me/2567014823881?text=I'm%20interested%20in%20{{ urlencode($phone->name) }}"
                       target="_blank"
-                      class="block md:hidden w-full bg-green-500 text-white text-xs py-2 px-4 rounded hover:bg-green-600 transition text-center">
+                      class="block md:hidden w-full bg-green-500 text-white text-xs py-2 px-3 rounded hover:bg-green-600 transition text-center">
                         <i class="fab fa-whatsapp mr-1"></i> WhatsApp Us
                     </a>
+                  </div>
+                </form>
+              @else
+                <div class="mt-2 text-center">
+                  <span class="text-xs text-red-600 font-medium">Out of Stock</span>
                 </div>
-            </form>
-
-            @else
-              <div class="mt-2 text-center">
-                <span class="text-xs text-red-600 font-medium">Out of Stock</span>
-              </div>
-            @endif
+              @endif
             </div>
-          </a>
+          </div>
         @empty
           <div class="col-span-full text-center py-8">
             <p class="text-gray-500">No phones available at the moment.</p>

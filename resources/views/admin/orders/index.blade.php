@@ -1,336 +1,181 @@
-    <x-layouts.app :title="__('Order Management')">
-        <div class="min-h-full bg-gray-50 dark:bg-zinc-900">
+<x-layouts.app :title="__('Order Management')">
+    <div class="space-y-8">
         <!-- Page Header -->
-        <div class="bg-white dark:bg-zinc-800 shadow-sm border-b border-gray-200 dark:border-zinc-700">
-            <div class="px-4 sm:px-6 lg:px-8 py-6">
-                <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between">
-                    <div>
-                        <h1 class="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-white">
-                            Order Management
-                        </h1>
-                        <p class="mt-1 text-sm text-gray-600 dark:text-gray-400">
-                            Manage orders, statuses, and payments across your platform.
-                        </p>
-                    </div>
-                    <div class="mt-4 sm:mt-0 flex flex-col sm:flex-row gap-3">
-                        <div class="flex items-center gap-2 text-sm text-gray-500 dark:text-gray-400">
-                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197m13.5-9a2.5 2.5 0 11-5 0 2.5 2.5 0 015 0z"></path>
-                            </svg>
-                            Total Orders: {{ $orders->total() }}
-                        </div>
-                    </div>
+        <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+            <div class="flex flex-col gap-1">
+                <h1 class="text-3xl font-bold tracking-tight text-foreground">
+                    Order Management
+                </h1>
+                <p class="text-sm font-medium text-muted-foreground">
+                    Manage orders, statuses, and payments across your platform.
+                </p>
+            </div>
+            <div class="flex items-center gap-3">
+                <div class="hidden sm:flex flex-col items-end px-4 border-r">
+                    <span class="text-xs font-semibold text-muted-foreground uppercase tracking-wider">Total Orders</span>
+                    <span class="text-sm font-bold">{{ $orders->total() }}</span>
                 </div>
             </div>
         </div>
 
-        <!-- Main Content -->
-        <div class="px-4 sm:px-6 lg:px-8 py-6">
-            <!-- Quick Stats -->
-            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
-                <div class="bg-white dark:bg-zinc-800 rounded-xl p-6 shadow-sm border border-gray-200 dark:border-zinc-700">
-                    <div class="flex items-center">
-                        <div class="flex-shrink-0 w-10 h-10 bg-green-100 dark:bg-green-900/50 rounded-lg flex items-center justify-center">
-                            <svg class="w-5 h-5 text-green-600 dark:text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                            </svg>
-                        </div>
-                        <div class="ml-4">
-                            <p class="text-sm font-medium text-gray-600 dark:text-gray-400">Count</p>
-                            <p class="text-2xl font-bold text-gray-900 dark:text-white">
-                                {{ $orders->count() }}
-                            </p>
-                        </div>
+        <!-- Statistics Grid -->
+        <div class="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+            <x-ui.card class="p-6 transition-all hover:border-primary/50 group">
+                <div class="flex items-center justify-between space-y-0 pb-2">
+                    <h3 class="text-sm font-medium text-muted-foreground">Pending Orders</h3>
+                    <div class="bg-yellow-100 dark:bg-yellow-900/40 p-2 rounded-lg">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-yellow-600 dark:text-yellow-400"><circle cx="12" cy="12" r="10"/><line x1="12" x2="12" y1="8" y2="12"/><line x1="12" x2="12.01" y1="16" y2="16"/></svg>
                     </div>
                 </div>
+                <div class="text-2xl font-bold">{{ $orders->where('status', 'pending')->count() }}</div>
+                <p class="text-xs text-muted-foreground mt-1">Awaiting processing</p>
+            </x-ui.card>
 
-                <div class="bg-white dark:bg-zinc-800 rounded-xl p-6 shadow-sm border border-gray-200 dark:border-zinc-700">
-                    <div class="flex items-center">
-                        <div class="flex-shrink-0 w-10 h-10 bg-yellow-100 dark:bg-yellow-900/50 rounded-lg flex items-center justify-center">
-                            <svg class="w-5 h-5 text-yellow-600 dark:text-yellow-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.268 16.5c-.77.833.192 2.5 1.732 2.5z"></path>
-                            </svg>
-                        </div>
-                        <div class="ml-4">
-                            <p class="text-sm font-medium text-gray-600 dark:text-gray-400">Unprocessed</p>
-                            <p class="text-2xl font-bold text-gray-900 dark:text-white">
-                                {{ $orders->where('status', 'pending')->count() }}
-                            </p>
-                        </div>
+            <x-ui.card class="p-6 transition-all hover:border-primary/50 group">
+                <div class="flex items-center justify-between space-y-0 pb-2">
+                    <h3 class="text-sm font-medium text-muted-foreground">Processing</h3>
+                    <div class="bg-blue-100 dark:bg-blue-900/40 p-2 rounded-lg">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-blue-600 dark:text-blue-400"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10Z"/></svg>
                     </div>
                 </div>
+                <div class="text-2xl font-bold">{{ $orders->where('status', 'processing')->count() }}</div>
+                <p class="text-xs text-muted-foreground mt-1">Currently being handled</p>
+            </x-ui.card>
 
-                <div class="bg-white dark:bg-zinc-800 rounded-xl p-6 shadow-sm border border-gray-200 dark:border-zinc-700">
-                    <div class="flex items-center">
-                        <div class="flex-shrink-0 w-10 h-10 bg-purple-100 dark:bg-purple-900/50 rounded-lg flex items-center justify-center">
-                            <svg class="w-5 h-5 text-purple-600 dark:text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.031 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path>
-                            </svg>
-                        </div>
-                        <div class="ml-4">
-                            <p class="text-sm font-medium text-gray-600 dark:text-gray-400">Processing</p>
-                            <p class="text-2xl font-bold text-gray-900 dark:text-white">
-                                {{ $orders->where('status', 'processing')->count() }}
-                            </p>
-                        </div>
+            <x-ui.card class="p-6 transition-all hover:border-primary/50 group">
+                <div class="flex items-center justify-between space-y-0 pb-2">
+                    <h3 class="text-sm font-medium text-muted-foreground">Delivered</h3>
+                    <div class="bg-green-100 dark:bg-green-900/40 p-2 rounded-lg">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-green-600 dark:text-green-400"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
                     </div>
                 </div>
+                <div class="text-2xl font-bold">{{ $orders->where('status', 'delivered')->count() }}</div>
+                <p class="text-xs text-muted-foreground mt-1 text-green-600 font-medium">Completed transactions</p>
+            </x-ui.card>
 
-                <div class="bg-white dark:bg-zinc-800 rounded-xl p-6 shadow-sm border border-gray-200 dark:border-zinc-700">
-                    <div class="flex items-center">
-                        <div class="flex-shrink-0 w-10 h-10 bg-blue-100 dark:bg-blue-900/50 rounded-lg flex items-center justify-center">
-                            <svg class="w-5 h-5 text-blue-600 dark:text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                            </svg>
-                        </div>
-                        <div class="ml-4">
-                            <p class="text-sm font-medium text-gray-600 dark:text-gray-400">Delivered</p>
-                            <p class="text-2xl font-bold text-gray-900 dark:text-white">
-                                {{ $orders->where('status', 'delivered')->count() }}
-                            </p>
-                        </div>
+            <x-ui.card class="p-6 transition-all hover:border-primary/50 group">
+                <div class="flex items-center justify-between space-y-0 pb-2">
+                    <h3 class="text-sm font-medium text-muted-foreground">Total Revenue</h3>
+                    <div class="bg-primary/10 p-2 rounded-lg">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-primary"><circle cx="12" cy="12" r="10"/><path d="M16 8h-6a2 2 0 1 0 0 4h4a2 2 0 1 1 0 4H8"/><path d="M12 18V6"/></svg>
                     </div>
+                </div>
+                <div class="text-xl font-bold truncate">UGX {{ number_format($orders->sum('total')) }}</div>
+                <p class="text-xs text-muted-foreground mt-1">Gross sales value</p>
+            </x-ui.card>
+        </div>
+
+        <!-- Orders Table Section -->
+        <x-ui.card class="overflow-hidden shadow-md">
+            <div class="p-6 flex flex-col sm:flex-row items-start sm:items-center justify-between border-b gap-4">
+                <div>
+                    <h3 class="text-lg font-semibold">Orders Ledger</h3>
+                    <p class="text-sm text-muted-foreground">A complete history of customer purchases and order states.</p>
+                </div>
+                <div class="flex items-center gap-2 w-full sm:w-auto">
+                    <x-ui.input placeholder="Search orders..." class="max-w-[300px]" id="orderSearch" />
                 </div>
             </div>
-            <div class="bg-white dark:bg-zinc-800 rounded-xl shadow-sm border border-gray-200 dark:border-zinc-700 overflow-hidden">
-                <div class="px-6 py-5 border-b border-gray-200 dark:border-zinc-700">
-                    <h3 class="text-lg font-semibold text-gray-900 dark:text-white">Recent Orders</h3>
-                    <p class="text-sm text-gray-600 dark:text-gray-400 mt-1">Manage and track all customer orders</p>
-                </div>
 
-                <div class="block lg:hidden">
-                    <div class="divide-y divide-gray-200 dark:divide-zinc-700">
+            <div class="relative w-full overflow-auto">
+                <table class="w-full caption-bottom text-sm">
+                    <thead class="[&_tr]:border-b bg-muted/30">
+                        <tr class="border-b transition-colors hover:bg-muted/50">
+                            <th class="h-12 px-4 text-left align-middle font-medium text-muted-foreground">Order ID</th>
+                            <th class="h-12 px-4 text-left align-middle font-medium text-muted-foreground">Customer</th>
+                            <th class="h-12 px-4 text-left align-middle font-medium text-muted-foreground hidden sm:table-cell">Total</th>
+                            <th class="h-12 px-4 text-left align-middle font-medium text-muted-foreground">Status</th>
+                            <th class="h-12 px-4 text-left align-middle font-medium text-muted-foreground hidden md:table-cell">Date</th>
+                            <th class="h-12 px-4 text-right align-middle font-medium text-muted-foreground">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody class="[&_tr:last-child]:border-0">
                         @forelse($orders as $order)
-                            <div class="p-6 space-y-4">
-                                <div class="flex items-center justify-between">
-                                    <div>
-                                        <h4 class="text-base font-semibold text-gray-900 dark:text-white">{{ $order->order_number }}</h4>
-                                        <p class="text-sm text-gray-600 dark:text-gray-400">{{ $order->items->count() }} items</p>
+                            <tr class="border-b transition-colors hover:bg-muted/50 order-row" data-id="{{ strtolower($order->order_number) }}" data-customer="{{ strtolower($order->first_name . ' ' . $order->last_name) }}">
+                                <td class="p-4 align-middle">
+                                    <div class="font-bold text-foreground">#{{ $order->order_number }}</div>
+                                    <div class="text-xs text-muted-foreground">{{ $order->items->count() }} line items</div>
+                                </td>
+                                <td class="p-4 align-middle">
+                                    <div class="flex flex-col">
+                                        <span class="font-bold">{{ $order->first_name }} {{ $order->last_name }}</span>
+                                        <span class="text-[10px] text-muted-foreground truncate max-w-[150px]">{{ $order->email }}</span>
                                     </div>
-                                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium
-                                        @if($order->status == 'pending') bg-yellow-100 text-yellow-800 dark:bg-yellow-900/50 dark:text-yellow-400
-                                        @elseif($order->status == 'processing') bg-blue-100 text-blue-800 dark:bg-blue-900/50 dark:text-blue-400
-                                        @elseif($order->status == 'shipped') bg-purple-100 text-purple-800 dark:bg-purple-900/50 dark:text-purple-400
-                                        @elseif($order->status == 'delivered') bg-green-100 text-green-800 dark:bg-green-900/50 dark:text-green-400
-                                        @elseif($order->status == 'cancelled') bg-red-100 text-red-800 dark:bg-red-900/50 dark:text-red-400
-                                        @endif">
+                                </td>
+                                <td class="p-4 align-middle hidden sm:table-cell font-bold text-primary">
+                                    UGX {{ number_format($order->total) }}
+                                </td>
+                                <td class="p-4 align-middle">
+                                    <x-ui.badge :variant="match($order->status) {
+                                        'delivered' => 'default',
+                                        'pending' => 'secondary',
+                                        'cancelled' => 'destructive',
+                                        'processing' => 'outline',
+                                        'shipped' => 'secondary',
+                                        default => 'outline'
+                                    }">
                                         {{ ucfirst($order->status) }}
-                                    </span>
-                                </div>
-
-                                <div class="space-y-2">
-                                    <div>
-                                        <span class="text-sm font-medium text-gray-900 dark:text-white">{{ $order->first_name }} {{ $order->last_name }}</span>
-                                        <p class="text-sm text-gray-600 dark:text-gray-400">{{ $order->email }}</p>
-                                        <p class="text-sm text-gray-600 dark:text-gray-400">{{ $order->phone }}</p>
+                                    </x-ui.badge>
+                                </td>
+                                <td class="p-4 align-middle hidden md:table-cell text-xs">
+                                    <div class="flex flex-col">
+                                        <span>{{ $order->created_at->format('M d, Y') }}</span>
+                                        <span class="text-muted-foreground font-mono">{{ $order->created_at->format('h:i A') }}</span>
                                     </div>
-                                </div>
-
-                                <div class="grid grid-cols-2 gap-4 text-sm">
-                                    <div>
-                                        <p class="text-gray-500 dark:text-gray-400">Total Amount</p>
-                                        <p class="font-semibold text-gray-900 dark:text-white">UGX {{ number_format($order->total) }}</p>
-                                        <p class="text-xs text-gray-500 dark:text-gray-400">{{ $order->payment_method }}</p>
-                                    </div>
-                                    <div>
-                                        <p class="text-gray-500 dark:text-gray-400">Order Date</p>
-                                        <p class="font-medium text-gray-900 dark:text-white">{{ $order->created_at->format('M d, Y') }}</p>
-                                        <p class="text-xs text-gray-500 dark:text-gray-400">{{ $order->created_at->format('h:i A') }}</p>
-                                    </div>
-                                </div>
-
-                                <div class="pt-3 border-t border-gray-200 dark:border-zinc-700">
-                                    <a href="{{ route('admin.orders.show', $order) }}"
-                                       class="inline-flex items-center gap-2 px-4 py-2 text-sm font-medium text-indigo-600 dark:text-indigo-400 hover:text-indigo-700 dark:hover:text-indigo-300 bg-indigo-50 dark:bg-indigo-900/20 rounded-lg transition-colors"
-                                       wire:navigate>
-                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
-                                        </svg>
-                                        View Details
-                                    </a>
-                                </div>
-                            </div>
-                        @empty
-                            <div class="p-12 text-center">
-                                <svg class="mx-auto h-12 w-12 text-gray-400 dark:text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"></path>
-                                </svg>
-                                <h3 class="mt-4 text-sm font-medium text-gray-900 dark:text-white">No orders found</h3>
-                                <p class="mt-2 text-sm text-gray-500 dark:text-gray-400">No orders match your current filters.</p>
-                            </div>
-                        @endforelse
-                    </div>
-                </div>
-
-                <div class="hidden lg:block overflow-x-auto">
-                    <table id="ordersTable" class="min-w-full divide-y divide-gray-200 dark:divide-zinc-700">
-                        <thead class="bg-gray-50 dark:bg-zinc-900">
-                            <tr>
-                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Order</th>
-                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Customer</th>
-                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Total</th>
-                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Status</th>
-                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Date</th>
-                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Actions</th>
+                                </td>
+                                <td class="p-4 align-middle text-right">
+                                    <x-ui.button variant="ghost" size="sm" :href="route('admin.orders.show', $order)" wire:navigate>
+                                        View
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="ml-1"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+                                    </x-ui.button>
+                                </td>
                             </tr>
-                        </thead>
-                        <tbody class="bg-white dark:bg-zinc-800 divide-y divide-gray-200 dark:divide-zinc-700">
-                            @forelse($orders as $order)
-                                <tr class="hover:bg-gray-50 dark:hover:bg-zinc-700 transition-colors">
-                                    <td class="px-6 py-4 whitespace-nowrap">
-                                        <div class="text-sm font-medium text-gray-900 dark:text-white">{{ $order->order_number }}</div>
-                                        <div class="text-sm text-gray-500 dark:text-gray-400">{{ $order->items->count() }} items</div>
-                                    </td>
-                                    <td class="px-6 py-4 whitespace-nowrap">
-                                        <div class="text-sm font-medium text-gray-900 dark:text-white">{{ $order->first_name }} {{ $order->last_name }}</div>
-                                        <div class="text-sm text-gray-500 dark:text-gray-400">{{ $order->email }}</div>
-                                        <div class="text-sm text-gray-500 dark:text-gray-400">{{ $order->phone }}</div>
-                                    </td>
-                                    <td class="px-6 py-4 whitespace-nowrap">
-                                        <div class="text-sm font-medium text-gray-900 dark:text-white">UGX {{ number_format($order->total) }}</div>
-                                        <div class="text-sm text-gray-500 dark:text-gray-400">{{ $order->payment_method }}</div>
-                                    </td>
-                                    <td class="px-6 py-4 whitespace-nowrap">
-                                        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium
-                                            @if($order->status == 'pending') bg-yellow-100 text-yellow-800 dark:bg-yellow-900/50 dark:text-yellow-400
-                                            @elseif($order->status == 'processing') bg-blue-100 text-blue-800 dark:bg-blue-900/50 dark:text-blue-400
-                                            @elseif($order->status == 'shipped') bg-purple-100 text-purple-800 dark:bg-purple-900/50 dark:text-purple-400
-                                            @elseif($order->status == 'delivered') bg-green-100 text-green-800 dark:bg-green-900/50 dark:text-green-400
-                                            @elseif($order->status == 'cancelled') bg-red-100 text-red-800 dark:bg-red-900/50 dark:text-red-400
-                                            @endif">
-                                            {{ ucfirst($order->status) }}
-                                        </span>
-                                    </td>
-                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">
-                                        <div>{{ $order->created_at->format('M d, Y') }}</div>
-                                        <div class="text-xs text-gray-400 dark:text-gray-500">{{ $order->created_at->format('h:i A') }}</div>
-                                    </td>
-                                    <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                                        <a href="{{ route('admin.orders.show', $order) }}"
-                                           class="text-indigo-600 dark:text-indigo-400 hover:text-indigo-700 dark:hover:text-indigo-300 transition-colors"
-                                           wire:navigate>
-                                            View
-                                        </a>
-                                    </td>
-                                </tr>
-                            @empty
-                                <tr>
-                                    <td colspan="6" class="px-6 py-12 text-center">
-                                        <div class="flex flex-col items-center">
-                                            <svg class="w-12 h-12 text-gray-400 dark:text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"></path>
-                                            </svg>
-                                            <h3 class="mt-4 text-sm font-medium text-gray-900 dark:text-white">No orders found</h3>
-                                            <p class="mt-2 text-sm text-gray-500 dark:text-gray-400">No orders match your current filters.</p>
+                        @empty
+                            <tr>
+                                <td colspan="6" class="p-24 text-center">
+                                    <div class="flex flex-col items-center gap-2">
+                                        <div class="bg-muted p-4 rounded-full">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-muted-foreground"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4Z"/><path d="M3 6h18"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
                                         </div>
-                                    </td>
-                                </tr>
-                            @endforelse
-                        </tbody>
-                    </table>
-                </div>
-
-                @if($orders->hasPages())
-                    <div class="px-6 py-4 border-t border-gray-200 dark:border-zinc-700">
-                        {{ $orders->appends(request()->query())->links() }}
-                    </div>
-                @endif
+                                        <h3 class="text-xl font-bold">No orders found</h3>
+                                        <p class="text-muted-foreground">Try adjusting your filters or search criteria.</p>
+                                    </div>
+                                </td>
+                            </tr>
+                        @endforelse
+                    </tbody>
+                </table>
             </div>
-        </div>
+
+            @if($orders->count() > 0)
+                <div class="p-6 border-t">
+                    {{ $orders->appends(request()->query())->links() }}
+                </div>
+            @endif
+        </x-ui.card>
     </div>
-            </x-layouts.app>
 
-            @push('scripts')
-                <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.13.7/css/jquery.dataTables.css">
-                <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/responsive/2.5.0/css/responsive.dataTables.min.css">
-                <script type="text/javascript" src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
-                <script type="text/javascript" src="https://cdn.datatables.net/1.13.7/js/jquery.dataTables.min.js"></script>
-                <script type="text/javascript" src="https://cdn.datatables.net/responsive/2.5.0/js/dataTables.responsive.min.js"></script>
+    @push('scripts')
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const searchInput = document.getElementById('orderSearch');
+            const rows = document.querySelectorAll('.order-row');
 
-                <script>
-                    $(document).ready(function() {
-                        // Only initialize DataTable on desktop (screens wider than 1024px, since this uses lg:block)
-                        if (window.innerWidth >= 1024) {
-                            $('#ordersTable').DataTable({
-                                responsive: true,
-                                pageLength: 25,
-                                lengthMenu: [[10, 25, 50, -1], [10, 25, 50, "All"]],
-                                order: [[4, 'desc']], // Sort by date
-                                language: {
-                                    search: "Search orders:",
-                                    lengthMenu: "Show _MENU_ orders per page",
-                                    info: "Showing _START_ to _END_ of _TOTAL_ orders",
-                                    infoEmpty: "Showing 0 to 0 of 0 orders",
-                                    infoFiltered: "(filtered from _MAX_ total orders)",
-                                    paginate: {
-                                        first: "First",
-                                        last: "Last",
-                                        next: "Next",
-                                        previous: "Previous"
-                                    }
-                                },
-                                columnDefs: [
-                                    {
-                                        targets: [5], // Actions column
-                                        orderable: false,
-                                        searchable: false
-                                    }
-                                ],
-                                dom: '<"flex flex-col sm:flex-row justify-between items-center mb-6"lf>rt<"flex flex-col sm:flex-row justify-between items-center mt-6"ip>',
-                                initComplete: function() {
-                                    // Add custom styling to DataTables elements
-                                    $('.dataTables_wrapper').addClass('text-gray-900 dark:text-white');
-                                    $('.dataTables_filter input').addClass('px-3 py-2 border border-gray-300 dark:border-zinc-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 dark:bg-zinc-700 dark:text-white');
-                                    $('.dataTables_length select').addClass('px-3 py-2 border border-gray-300 dark:border-zinc-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 dark:bg-zinc-700 dark:text-white');
-                                    $('.dataTables_paginate .paginate_button').addClass('px-3 py-2 mx-1 text-sm font-medium text-gray-500 dark:text-gray-400 bg-white dark:bg-zinc-800 border border-gray-300 dark:border-zinc-600 rounded-lg hover:bg-gray-50 dark:hover:bg-zinc-700 hover:text-gray-700 dark:hover:text-white transition-colors');
-                                    $('.dataTables_paginate .paginate_button.current').addClass('!bg-indigo-600 !text-white !border-indigo-600 hover:!bg-indigo-700 dark:!bg-indigo-600 dark:!border-indigo-600 dark:hover:!bg-indigo-700');
-                                }
-                            });
-                        }
-
-                        // Handle window resize to reinitialize DataTable if needed
-                        let resizeTimer;
-                        $(window).on('resize', function() {
-                            clearTimeout(resizeTimer);
-                            resizeTimer = setTimeout(function() {
-                                const isDesktop = window.innerWidth >= 1024; // Check for lg breakpoint
-                                const tableExists = $.fn.DataTable.isDataTable('#ordersTable');
-
-                                if (isDesktop && !tableExists) {
-                                    // Initialize DataTable for desktop view
-                                    $('#ordersTable').DataTable({
-                                        responsive: true,
-                                        pageLength: 25,
-                                        lengthMenu: [[10, 25, 50, -1], [10, 25, 50, "All"]],
-                                        order: [[4, 'desc']],
-                                        language: {
-                                            search: "Search orders:",
-                                            lengthMenu: "Show _MENU_ orders per page",
-                                            info: "Showing _START_ to _END_ of _TOTAL_ orders",
-                                            infoEmpty: "Showing 0 to 0 of 0 orders",
-                                            infoFiltered: "(filtered from _MAX_ total orders)",
-                                            paginate: {
-                                                first: "First",
-                                                last: "Last",
-                                                next: "Next",
-                                                previous: "Previous"
-                                            }
-                                        },
-                                        columnDefs: [
-                                            {
-                                                targets: [5],
-                                                orderable: false,
-                                                searchable: false
-                                            }
-                                        ]
-                                    });
-                                } else if (!isDesktop && tableExists) {
-                                    // Destroy DataTable for mobile view
-                                    $('#ordersTable').DataTable().destroy();
-                                }
-                            }, 250);
-                        });
-                    });
-                </script>
-            @endpush
+            searchInput.addEventListener('input', function(e) {
+                const term = e.target.value.toLowerCase();
+                
+                rows.forEach(row => {
+                    const id = row.getAttribute('data-id');
+                    const customer = row.getAttribute('data-customer');
+                    
+                    if (id.includes(term) || customer.includes(term)) {
+                        row.style.display = '';
+                    } else {
+                        row.style.display = 'none';
+                    }
+                });
+            });
+        });
+    </script>
+    @endpush
+</x-layouts.app>

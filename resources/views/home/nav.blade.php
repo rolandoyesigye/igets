@@ -10,9 +10,11 @@
 
 
   <link rel="icon" href="{{ asset('images/logo1.png') }}" sizes="any">
-<link rel="icon" href="{{ asset('images/logo1.png') }}" type="image/png">
-<link rel="apple-touch-icon" href="{{ asset('images/logo1.png') }}">
-
+  <link rel="icon" href="{{ asset('images/logo1.png') }}" type="image/png">
+  <link rel="apple-touch-icon" href="{{ asset('images/logo1.png') }}">
+  
+  <!-- Toastr CSS -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
 </head>
 <body class="bg-blue-50 overflow-x-hidden" x-data="{ open: false }">
 
@@ -20,7 +22,10 @@
   <header class="bg-white shadow">
     <div class="max-w-7xl mx-auto flex items-center justify-between px-6 py-4">
       <!-- Logo -->
-       <a href="{{ route('home') }}"><img src="{{ asset('images/logo1.png') }}" width="100px" height="100px" alt="iGETS Logo"></a>
+      <a href="{{ route('home') }}" class="flex items-center gap-3">
+        <img src="{{ asset('images/logo1.png') }}" width="100" height="100" alt="{{ config('app.name', 'iGET') }} Logo">
+        <span class="text-2xl font-bold text-blue-700">{{ config('app.name', 'iGET') }}</span>
+      </a>
 
       <!-- Desktop Nav -->
       <nav class="hidden md:flex items-center space-x-6 sticky-top">
