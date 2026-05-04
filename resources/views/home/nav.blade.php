@@ -10,9 +10,11 @@
 
 
   <link rel="icon" href="{{ asset('images/logo1.png') }}" sizes="any">
-<link rel="icon" href="{{ asset('images/logo1.png') }}" type="image/png">
-<link rel="apple-touch-icon" href="{{ asset('images/logo1.png') }}">
-
+  <link rel="icon" href="{{ asset('images/logo1.png') }}" type="image/png">
+  <link rel="apple-touch-icon" href="{{ asset('images/logo1.png') }}">
+  
+  <!-- Toastr CSS -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
 </head>
 <body class="bg-blue-50 overflow-x-hidden" x-data="{ open: false }">
 

@@ -72,7 +72,11 @@ class Product extends Model
             return 'Out of Stock';
         }
 
-        return 'In Stock';
+        if ($this->stock_quantity <= 5) {
+            return "Low Stock ({$this->stock_quantity} left)";
+        }
+
+        return "In Stock ({$this->stock_quantity} available)";
     }
 
     /**
@@ -82,6 +86,10 @@ class Product extends Model
     {
         if ($this->isOutOfStock()) {
             return 'text-red-600';
+        }
+
+        if ($this->stock_quantity <= 5) {
+            return 'text-orange-600';
         }
 
         return 'text-green-600';
@@ -185,10 +193,13 @@ class Product extends Model
 
         return $query->where(function ($q) use ($searchTerm) {
             $searchLower = strtolower(trim($searchTerm));
-            $q->whereRaw('LOWER(name) LIKE ?', ["%{$searchLower}%"])
-                ->orWhereRaw('LOWER(description) LIKE ?', ["%{$searchLower}%"])
-                ->orWhereRaw('LOWER(brand) LIKE ?', ["%{$searchLower}%"])
-                ->orWhereRaw('LOWER(category) LIKE ?', ["%{$searchLower}%"]);
+            // Escape % and _ for LIKE queries
+            $escapedTerm = str_replace(['%', '_'], ['\%', '\_'], $searchLower);
+            
+            $q->whereRaw('LOWER(name) LIKE ?', ["%{$escapedTerm}%"])
+                ->orWhereRaw('LOWER(description) LIKE ?', ["%{$escapedTerm}%"])
+                ->orWhereRaw('LOWER(brand) LIKE ?', ["%{$escapedTerm}%"])
+                ->orWhereRaw('LOWER(category) LIKE ?', ["%{$escapedTerm}%"]);
         });
     }
 }

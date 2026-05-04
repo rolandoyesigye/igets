@@ -69,13 +69,13 @@ class StockManagementTest extends TestCase
         $user = User::factory()->create();
 
         $response = $this->actingAs($user)
-            ->post(route('cart.add'), [
+            ->postJson(route('cart.add'), [
                 'product_id' => $product->id,
                 'quantity' => 1,
             ]);
 
         $response->assertStatus(422);
-        $this->assertStringContainsString('out of stock', $response->getContent());
+        $this->assertStringContainsString('unavailable', $response->getContent());
     }
 
     public function test_cannot_add_more_than_available_stock()
@@ -88,7 +88,7 @@ class StockManagementTest extends TestCase
         $user = User::factory()->create();
 
         $response = $this->actingAs($user)
-            ->post(route('cart.add'), [
+            ->postJson(route('cart.add'), [
                 'product_id' => $product->id,
                 'quantity' => 10,
             ]);

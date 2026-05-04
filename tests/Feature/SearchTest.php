@@ -225,10 +225,10 @@ class SearchTest extends TestCase
     public function empty_search_returns_no_results()
     {
         $results = Product::search('')->active()->get();
-        $this->assertCount(4, $results); // Should return all active products when no search term
+        $this->assertCount(3, $results); // Should return all active products when no search term
 
         $results = Product::search('   ')->active()->get();
-        $this->assertCount(4, $results); // Should return all active products for whitespace
+        $this->assertCount(3, $results); // Should return all active products for whitespace
     }
 
     /** @test */

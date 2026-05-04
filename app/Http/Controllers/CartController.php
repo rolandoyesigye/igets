@@ -44,6 +44,9 @@ class CartController extends Controller
 
             return $this->toastSuccess('Product added to cart successfully!');
         } catch (\Exception $e) {
+            if (request()->expectsJson()) {
+                return response()->json(['message' => $e->getMessage()], 422);
+            }
             return $this->toastError($e->getMessage());
         }
     }

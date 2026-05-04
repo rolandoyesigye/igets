@@ -31,6 +31,7 @@ class ProductFactory extends Factory
             'category' => $this->faker->randomElement(['laptops', 'phones', 'accessories']),
             'image' => null,
             'is_active' => true,
+            'stock_quantity' => 10,
         ];
     }
 }
