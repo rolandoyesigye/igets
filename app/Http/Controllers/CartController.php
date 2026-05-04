@@ -7,7 +7,6 @@ use App\Models\Product;
 use App\Services\CartService;
 use App\Traits\ToastrNotifications;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 
 class CartController extends Controller
 {
@@ -26,6 +25,7 @@ class CartController extends Controller
     public function index()
     {
         $cartItems = $this->cartService->getItems();
+
         return view('cart.index', compact('cartItems'));
     }
 
@@ -36,11 +36,12 @@ class CartController extends Controller
     {
         $request->validate([
             'product_id' => 'required|exists:products,id',
-            'quantity' => 'required|integer|min:1|max:99'
+            'quantity' => 'required|integer|min:1|max:99',
         ]);
 
         try {
             $this->cartService->add($request->product_id, $request->quantity);
+
             return $this->toastSuccess('Product added to cart successfully!');
         } catch (\Exception $e) {
             return $this->toastError($e->getMessage());
@@ -53,7 +54,7 @@ class CartController extends Controller
     public function update(Request $request, $itemId)
     {
         $request->validate([
-            'quantity' => 'required|integer|min:1|max:99'
+            'quantity' => 'required|integer|min:1|max:99',
         ]);
 
         if ($this->cartService->update($itemId, $request->quantity)) {
@@ -81,6 +82,7 @@ class CartController extends Controller
     public function clear()
     {
         $this->cartService->clear();
+
         return $this->toastSuccess('Cart cleared successfully!');
     }
 
@@ -90,6 +92,7 @@ class CartController extends Controller
     public function getCartCount()
     {
         $count = $this->cartService->getCount();
+
         return response()->json(['count' => $count]);
     }
-} 
+}

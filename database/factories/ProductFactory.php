@@ -33,4 +33,4 @@ class ProductFactory extends Factory
             'is_active' => true,
         ];
     }
-} 
+}

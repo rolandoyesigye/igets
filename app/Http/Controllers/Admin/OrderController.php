@@ -14,11 +14,11 @@ class OrderController extends Controller
      */
     public function index()
     {
-        $orders = Order::with(["user", "items"])
+        $orders = Order::with(['user', 'items'])
             ->latest()
             ->paginate(15);
 
-        return view("admin.orders.index", compact("orders"));
+        return view('admin.orders.index', compact('orders'));
     }
 
     /**
@@ -26,9 +26,9 @@ class OrderController extends Controller
      */
     public function show(Order $order)
     {
-        $order->load(["user", "items.product"]);
+        $order->load(['user', 'items.product']);
 
-        return view("admin.orders.show", compact("order"));
+        return view('admin.orders.show', compact('order'));
     }
 
     /**
@@ -37,18 +37,17 @@ class OrderController extends Controller
     public function updateStatus(Request $request, Order $order)
     {
         $request->validate([
-            "status" =>
-                "required|in:pending,processing,shipped,delivered,cancelled",
+            'status' => 'required|in:pending,processing,shipped,delivered,cancelled',
         ]);
 
         $oldStatus = $order->status;
         $newStatus = $request->status;
 
         if ($oldStatus === $newStatus) {
-            return back()->with("info", "Order status is already {$newStatus}.");
+            return back()->with('info', "Order status is already {$newStatus}.");
         }
 
-        $order->update(["status" => $newStatus]);
+        $order->update(['status' => $newStatus]);
 
         if ($order->user) {
             $statusLabel = ucfirst($newStatus);
@@ -68,7 +67,7 @@ class OrderController extends Controller
             ));
         }
 
-        return back()->with("success", "Order status updated successfully!");
+        return back()->with('success', 'Order status updated successfully!');
     }
 
     /**
@@ -76,25 +75,25 @@ class OrderController extends Controller
      */
     public function filter(Request $request)
     {
-        $query = Order::with(["user", "items"]);
+        $query = Order::with(['user', 'items']);
 
-        if ($request->filled("status")) {
-            $query->where("status", $request->status);
+        if ($request->filled('status')) {
+            $query->where('status', $request->status);
         }
 
-        if ($request->filled("search")) {
+        if ($request->filled('search')) {
             $search = strtolower($request->search);
             $query->where(function ($q) use ($search) {
-                $q->whereRaw("LOWER(order_number) LIKE ?", ["%{$search}%"])
-                    ->orWhereRaw("LOWER(first_name) LIKE ?", ["%{$search}%"])
-                    ->orWhereRaw("LOWER(last_name) LIKE ?", ["%{$search}%"])
-                    ->orWhereRaw("LOWER(email) LIKE ?", ["%{$search}%"])
-                    ->orWhereRaw("LOWER(phone) LIKE ?", ["%{$search}%"]);
+                $q->whereRaw('LOWER(order_number) LIKE ?', ["%{$search}%"])
+                    ->orWhereRaw('LOWER(first_name) LIKE ?', ["%{$search}%"])
+                    ->orWhereRaw('LOWER(last_name) LIKE ?', ["%{$search}%"])
+                    ->orWhereRaw('LOWER(email) LIKE ?', ["%{$search}%"])
+                    ->orWhereRaw('LOWER(phone) LIKE ?', ["%{$search}%"]);
             });
         }
 
         $orders = $query->latest()->paginate(15);
 
-        return view("admin.orders.index", compact("orders"));
+        return view('admin.orders.index', compact('orders'));
     }
 }

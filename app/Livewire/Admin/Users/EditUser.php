@@ -9,7 +9,9 @@ use Spatie\Permission\Models\Role;
 class EditUser extends Component
 {
     public User $user;
+
     public string $name = '';
+
     public array $selectedRoles = [];
 
     public function mount(User $user)

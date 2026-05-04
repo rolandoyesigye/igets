@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Notifications\UserNotification;
-use Illuminate\Http\Request;
 use Illuminate\Notifications\DatabaseNotification;
 use Illuminate\Support\Facades\Auth;
 

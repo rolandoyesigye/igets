@@ -2,11 +2,10 @@
 
 namespace Tests\Feature;
 
-use Tests\TestCase;
 use App\Models\Product;
-use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
+use Tests\TestCase;
 
 class SearchTest extends TestCase
 {
@@ -138,18 +137,18 @@ class SearchTest extends TestCase
 
         // Test lowercase search
         $component->set('query', 'macbook')
-                  ->assertSet('showResults', true)
-                  ->assertCount('products', 1);
+            ->assertSet('showResults', true)
+            ->assertCount('products', 1);
 
         // Test uppercase search
         $component->set('query', 'IPHONE')
-                  ->assertSet('showResults', true)
-                  ->assertCount('products', 1);
+            ->assertSet('showResults', true)
+            ->assertCount('products', 1);
 
         // Test mixed case search
         $component->set('query', 'Samsung')
-                  ->assertSet('showResults', true)
-                  ->assertCount('products', 1);
+            ->assertSet('showResults', true)
+            ->assertCount('products', 1);
     }
 
     /** @test */
@@ -177,17 +176,17 @@ class SearchTest extends TestCase
         // Test API search with lowercase
         $response = $this->getJson(route('api.search', ['q' => 'apple']));
         $response->assertStatus(200)
-                 ->assertJsonCount(2);
+            ->assertJsonCount(2);
 
         // Test API search with uppercase
         $response = $this->getJson(route('api.search', ['q' => 'APPLE']));
         $response->assertStatus(200)
-                 ->assertJsonCount(2);
+            ->assertJsonCount(2);
 
         // Test API search with mixed case
         $response = $this->getJson(route('api.search', ['q' => 'Apple']));
         $response->assertStatus(200)
-                 ->assertJsonCount(2);
+            ->assertJsonCount(2);
     }
 
     /** @test */
@@ -240,10 +239,10 @@ class SearchTest extends TestCase
         $this->assertCount(0, $results);
 
         // Test with percentage signs (LIKE wildcards)
-        $results = Product::search("%")->active()->get();
+        $results = Product::search('%')->active()->get();
         $this->assertCount(0, $results);
 
-        $results = Product::search("_")->active()->get();
+        $results = Product::search('_')->active()->get();
         $this->assertCount(0, $results);
     }
 }

@@ -2,10 +2,10 @@
 
 namespace App\Console\Commands;
 
-use Illuminate\Console\Command;
 use App\Models\User;
-use Spatie\Permission\Models\Role;
+use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Hash;
+use Spatie\Permission\Models\Role;
 
 class CreateAdminUser extends Command
 {
@@ -35,6 +35,7 @@ class CreateAdminUser extends Command
         // Check if user already exists
         if (User::where('email', $email)->exists()) {
             $this->error('User with this email already exists!');
+
             return 1;
         }
 
@@ -48,8 +49,9 @@ class CreateAdminUser extends Command
 
         // Get or create admin role
         $adminRole = Role::where('name', 'admin')->first();
-        if (!$adminRole) {
+        if (! $adminRole) {
             $this->error('Admin role not found! Please run the AdminUserSeeder first.');
+
             return 1;
         }
 
@@ -58,8 +60,8 @@ class CreateAdminUser extends Command
 
         $this->info("Admin user '{$name}' created successfully!");
         $this->info("Email: {$email}");
-        $this->info("Role: Admin");
-        $this->info("Dashboard access: Enabled");
+        $this->info('Role: Admin');
+        $this->info('Dashboard access: Enabled');
 
         return 0;
     }
